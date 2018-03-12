@@ -1,0 +1,14 @@
+swarm:
+  datasources:
+    data-sources:
+      customersDS:
+        driver-name: h2
+        connection-url: jdbc:h2:mem:customers;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+        user-name: sa
+        password: sa
+  logging:
+    loggers:
+      org.meetup.openshift.rhoar.customers:
+        level: DEBUG
+jaeger:
+  endpoint: http://localhost:14268/api/traces
