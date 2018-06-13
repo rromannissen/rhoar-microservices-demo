@@ -25,6 +25,12 @@ oc create configmap orders-config --from-file=application.properties=application
 
 Note that the application-openshift.properties file is renamed to application.properties. This is done because Spring Cloud Kubernetes looks for that exact file name inside the ConfigMap to which it points, included in the file bootstrap.properties.
 
+Finally, the Spring applications require access to the Kubernetes API in order to access the config maps. To do this, simply add the view role to the default service account:
+
+```
+oc policy add-role-to-user view -z default
+```
+
 As no OCP/Kubernetes integration plugin exists for the moment for Wildfly Swarm, the approach is slightly different in that case. For both services, a [Fabric8 resource fragment](https://maven.fabric8.io/#resource-fragments) is included in the src/main/fabric8 directory of each project, configuring a DeploymentConfig object pointing to a ConfigMap volume with the project-defaults.yml (renamed from bundled the project-openshift.yml file) configuration file. ConfigMap creation command would be as follows in this case:
 
 ```
