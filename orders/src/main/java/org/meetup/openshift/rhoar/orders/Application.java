@@ -10,12 +10,8 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import com.uber.jaeger.Configuration;
-import com.uber.jaeger.Configuration.ReporterConfiguration;
-import com.uber.jaeger.Configuration.SamplerConfiguration;
-import com.uber.jaeger.samplers.ProbabilisticSampler;
-import com.uber.jaeger.senders.HttpSender;
 
+import io.jaegertracing.Configuration;
 import io.opentracing.Tracer;
 import io.opentracing.contrib.jaxrs2.server.ServerTracingDynamicFeature;
 import io.opentracing.contrib.jaxrs2.server.SpanFinishingFilter;
@@ -40,10 +36,7 @@ public class Application {
     
     @Bean
     public Tracer tracer() {
-    	return new Configuration("orders", 
-				new SamplerConfiguration(ProbabilisticSampler.TYPE, 1),
-				new ReporterConfiguration(
-						new HttpSender(jaegerEndpoint))).getTracer();
+    	return new Configuration("orders").getTracer();
     }
     
     /* Register SpanFinishingFilter and ServerTracingDynamicFeature for the JAX-RS
@@ -52,7 +45,7 @@ public class Application {
     @Bean
     public FilterRegistrationBean spanFinishingFilterBean() {
     	final FilterRegistrationBean filterRegBean = new FilterRegistrationBean();
-    	filterRegBean.setFilter(new SpanFinishingFilter(tracer));
+    	filterRegBean.setFilter(new SpanFinishingFilter());
     	filterRegBean.addUrlPatterns("/*");
     	filterRegBean.setEnabled(Boolean.TRUE);
     	filterRegBean.setName("SpanFinishingFilter");

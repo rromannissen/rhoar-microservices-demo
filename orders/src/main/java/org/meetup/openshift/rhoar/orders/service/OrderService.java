@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.opentracing.ActiveSpan;
+import io.opentracing.Scope;
 import io.opentracing.Tracer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +27,7 @@ public class OrderService {
 	 * @return The {@link Order} with the supplied {@code id}, {@literal null} if no {@link Order} is found. 
 	 */
 	public Order findById(Long id) {
-		ActiveSpan span = tracer.buildSpan("findById").startActive();
+		Scope span = tracer.buildSpan("findById").startActive(true);
 		log.debug("Entering OrderService.findById()");
 		Order o = repository.findOne(id);	
 		if (o != null) {

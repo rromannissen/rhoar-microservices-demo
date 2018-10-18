@@ -20,8 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.uber.jaeger.Configuration;
-
+import io.jaegertracing.Configuration;
 import io.opentracing.Tracer;
 
 @RunWith(SpringRunner.class)
