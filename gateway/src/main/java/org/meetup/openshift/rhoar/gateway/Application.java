@@ -15,13 +15,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.netflix.hystrix.contrib.javanica.aop.aspectj.HystrixCommandAspect;
-import com.uber.jaeger.Configuration;
-import com.uber.jaeger.Configuration.ReporterConfiguration;
-import com.uber.jaeger.Configuration.SamplerConfiguration;
-import com.uber.jaeger.samplers.ProbabilisticSampler;
-import com.uber.jaeger.senders.HttpSender;
 
 import feign.opentracing.hystrix.TracingConcurrencyStrategy;
+import io.jaegertracing.Configuration;
+//import io.jaegertracing.Configuration;
 import io.opentracing.Tracer;
 import io.opentracing.contrib.jaxrs2.server.ServerTracingDynamicFeature;
 import io.opentracing.contrib.jaxrs2.server.SpanFinishingFilter;
@@ -56,11 +53,8 @@ public class Application
     }
     
     @Bean
-    public Tracer tracer() {
-    	return new Configuration("gateway", 
-				new SamplerConfiguration(ProbabilisticSampler.TYPE, 1),
-				new ReporterConfiguration(
-						new HttpSender(jaegerEndpoint))).getTracer();
+    public static Tracer tracer() {
+        return new Configuration("gateway").getTracer();
     }
     
     @Bean
@@ -74,7 +68,7 @@ public class Application
     @Bean
     public FilterRegistrationBean spanFinishingFilterBean() {
     	final FilterRegistrationBean filterRegBean = new FilterRegistrationBean();
-    	filterRegBean.setFilter(new SpanFinishingFilter(tracer));
+    	filterRegBean.setFilter(new SpanFinishingFilter());
     	filterRegBean.addUrlPatterns("/*");
     	filterRegBean.setEnabled(Boolean.TRUE);
     	filterRegBean.setName("SpanFinishingFilter");

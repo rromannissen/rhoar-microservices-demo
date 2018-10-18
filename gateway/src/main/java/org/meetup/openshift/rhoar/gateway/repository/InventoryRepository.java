@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import io.opentracing.ActiveSpan;
+import io.opentracing.Scope;
 import io.opentracing.Tracer;
 import lombok.extern.slf4j.Slf4j;
 import rx.Observable;
@@ -33,7 +33,7 @@ public class InventoryRepository {
 	String inventoryServiceURL;
 	
 	public List<OrderItem> getProductDetails(List<OrderItem> items){
-		ActiveSpan span = tracer.buildSpan("getProductDetails").startActive();
+		Scope span = tracer.buildSpan("getProductDetails").startActive(true);
 		log.debug("Entering OrdersService.getProductDetails()");
 		List<OrderItem> detailedItems = new ArrayList<>();
 		for(int index= 0; index < items.size();) {

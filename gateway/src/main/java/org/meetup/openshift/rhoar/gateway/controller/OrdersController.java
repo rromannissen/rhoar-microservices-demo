@@ -12,7 +12,7 @@ import org.meetup.openshift.rhoar.gateway.service.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import io.opentracing.ActiveSpan;
+import io.opentracing.Scope;
 import io.opentracing.Tracer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,7 +33,7 @@ public class OrdersController {
 		Order o;
 		/* Use a try-with-resources block to ensure that the active span
 		 * gets closed even in the case of exception.*/
-		try(ActiveSpan span = tracer.buildSpan("getById").startActive()){
+		try(Scope span = tracer.buildSpan("getById").startActive(true)){
 			log.debug("Entering OrderController.getById()");
 			o = orderService.getById(id);
 			if (o == null) {

@@ -1,6 +1,5 @@
 package org.meetup.openshift.rhoar.gateway.controller;
 
-import static com.jayway.restassured.RestAssured.when;
 import static org.hamcrest.CoreMatchers.is;
 
 import java.math.BigDecimal;
@@ -24,7 +23,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.jayway.restassured.RestAssured;
+import io.restassured.RestAssured;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(
@@ -87,7 +86,7 @@ public class OrdersControllerTest {
 		Mockito.when(service.getById(new Long (1)))
 	      .thenReturn(order);
 		
-		when().get(new Long(1).toString())
+		io.restassured.RestAssured.when().get(new Long(1).toString())
 			.then()
 			.statusCode(200)
 			.body("id", is(1))
@@ -113,7 +112,7 @@ public class OrdersControllerTest {
 		Mockito.when(service.getById(new Long (1)))
 	      .thenReturn(null);
 		
-		when().get(new Long(1).toString())
+		io.restassured.RestAssured.when().get(new Long(1).toString())
 		.then()
 		.statusCode(404);
 	}

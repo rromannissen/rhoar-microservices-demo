@@ -10,7 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 
-import io.opentracing.ActiveSpan;
+import io.opentracing.Scope;
 import io.opentracing.Tracer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +30,7 @@ public class OrderRepository {
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
 	})
 	public Order getOrderById(Long id) {
-		ActiveSpan span = tracer.buildSpan("getOrderById").startActive();
+		Scope span = tracer.buildSpan("getOrderById").startActive(true);
 		log.debug("Entering OrderRepository.getOrderById()");
 		UriComponentsBuilder builder = UriComponentsBuilder
 				.fromHttpUrl(ordersServiceURL)

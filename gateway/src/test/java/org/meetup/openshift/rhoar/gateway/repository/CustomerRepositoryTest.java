@@ -18,7 +18,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
-import com.uber.jaeger.Configuration;
+import io.jaegertracing.Configuration;
 
 import io.opentracing.Tracer;
 
