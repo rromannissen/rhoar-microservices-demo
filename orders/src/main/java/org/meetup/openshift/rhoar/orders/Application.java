@@ -12,6 +12,10 @@ import org.springframework.context.annotation.Bean;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 import io.jaegertracing.Configuration;
+import io.jaegertracing.Configuration.ReporterConfiguration;
+import io.jaegertracing.Configuration.SamplerConfiguration;
+import io.jaegertracing.Configuration.SenderConfiguration;
+import io.jaegertracing.internal.samplers.ProbabilisticSampler;
 import io.opentracing.Tracer;
 import io.opentracing.contrib.jaxrs2.server.ServerTracingDynamicFeature;
 import io.opentracing.contrib.jaxrs2.server.SpanFinishingFilter;
@@ -36,7 +40,18 @@ public class Application {
     
     @Bean
     public Tracer tracer() {
-    	return new Configuration("orders").getTracer();
+    	SamplerConfiguration samplerConfiguration = new SamplerConfiguration();
+    	ReporterConfiguration reporterConfiguration = new ReporterConfiguration();
+    	SenderConfiguration senderConfiguration = new SenderConfiguration();
+    	
+        return new Configuration("orders")
+        		.withSampler(samplerConfiguration
+        				.withType(ProbabilisticSampler.TYPE)
+        				.withParam(1))
+        		.withReporter(reporterConfiguration
+        				.withSender(senderConfiguration
+        						.withEndpoint(jaegerEndpoint)))
+        		.getTracer();
     }
     
     /* Register SpanFinishingFilter and ServerTracingDynamicFeature for the JAX-RS

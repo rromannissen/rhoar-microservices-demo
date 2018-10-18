@@ -18,6 +18,10 @@ import com.netflix.hystrix.contrib.javanica.aop.aspectj.HystrixCommandAspect;
 
 import feign.opentracing.hystrix.TracingConcurrencyStrategy;
 import io.jaegertracing.Configuration;
+import io.jaegertracing.Configuration.ReporterConfiguration;
+import io.jaegertracing.Configuration.SamplerConfiguration;
+import io.jaegertracing.Configuration.SenderConfiguration;
+import io.jaegertracing.internal.samplers.ProbabilisticSampler;
 //import io.jaegertracing.Configuration;
 import io.opentracing.Tracer;
 import io.opentracing.contrib.jaxrs2.server.ServerTracingDynamicFeature;
@@ -53,8 +57,19 @@ public class Application
     }
     
     @Bean
-    public static Tracer tracer() {
-        return new Configuration("gateway").getTracer();
+    public Tracer tracer() {
+    	SamplerConfiguration samplerConfiguration = new SamplerConfiguration();
+    	ReporterConfiguration reporterConfiguration = new ReporterConfiguration();
+    	SenderConfiguration senderConfiguration = new SenderConfiguration();
+    	
+        return new Configuration("gateway")
+        		.withSampler(samplerConfiguration
+        				.withType(ProbabilisticSampler.TYPE)
+        				.withParam(1))
+        		.withReporter(reporterConfiguration
+        				.withSender(senderConfiguration
+        						.withEndpoint(jaegerEndpoint)))
+        		.getTracer();
     }
     
     @Bean
