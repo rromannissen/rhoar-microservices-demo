@@ -1,7 +1,5 @@
 package org.meetup.openshift.rhoar.customers.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,11 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+
 @Entity
 @Table(name = "customers")
-public class Customer implements Serializable{
-
-	private static final long serialVersionUID = -782884566799502203L;
+public class Customer extends PanacheEntityBase {
 
 	@Id
     @SequenceGenerator(
@@ -94,6 +92,7 @@ public class Customer implements Serializable{
 	public void setCountry(String country) {
 		this.country = country;
 	}
+	
 	@Override
 	public String toString() {
 		return "Customer [id=" + id + ", username=" + username + ", name=" + name + ", surname=" + surname

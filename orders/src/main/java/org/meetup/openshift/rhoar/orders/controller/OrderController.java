@@ -1,23 +1,21 @@
 package org.meetup.openshift.rhoar.orders.controller;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import org.meetup.openshift.rhoar.orders.exception.ResourceNotFoundException;
 import org.meetup.openshift.rhoar.orders.model.Order;
 import org.meetup.openshift.rhoar.orders.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import io.opentracing.ActiveSpan;
+import io.opentracing.Span;
 import io.opentracing.Tracer;
 import lombok.extern.slf4j.Slf4j;
 
-@Path("/orders")
-@Component
+@RestController
+@RequestMapping("/orders")
 @Slf4j
 public class OrderController {
 	
@@ -26,20 +24,21 @@ public class OrderController {
 	
 	@Autowired
 	Tracer tracer;
-	@GET
-    @Path("/{id}")
-    @Produces({ MediaType.APPLICATION_JSON } )
-    public Order getById(@PathParam("id") Long id) {
+	
+	
+	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Order getById(@PathVariable("id") Long id) {
 		Order o;
-		/* Use a try-with-resources block to ensure that the active span
-		 * gets closed even in the case of exception.*/
-		try(ActiveSpan span = tracer.buildSpan("getById").startActive()){
+		Span span = tracer.buildSpan("getById").start();
+		try{
 			log.debug("Entering OrderController.getById()");
 			o = orderService.findById(id);
 			if (o == null) {
 				throw new ResourceNotFoundException("Requested order doesn't exist");
 			}
 			log.debug("Returning element: " + o);
+		} finally {
+			span.finish();
 		}
 		return o;
 	}

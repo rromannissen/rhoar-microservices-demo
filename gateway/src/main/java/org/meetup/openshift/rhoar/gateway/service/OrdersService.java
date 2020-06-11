@@ -7,7 +7,7 @@ import org.meetup.openshift.rhoar.gateway.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import io.opentracing.ActiveSpan;
+import io.opentracing.Span;
 import io.opentracing.Tracer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,14 +28,14 @@ public class OrdersService {
 	private InventoryRepository inventoryRepository;
 	
 	public Order getById(Long id) {		
-		ActiveSpan span = tracer.buildSpan("getById").startActive();
+		Span span = tracer.buildSpan("getById").start();
 		log.debug("Entering OrdersService.getById()");
 		Order o = orderRepository.getOrderById(id);
 		if (o != null) {
 			o.setCustomer(customerRepository.getCustomerById(o.getCustomer().getId()));
 			o.setItems(inventoryRepository.getProductDetails(o.getItems()));
 		}
-		span.close();
+		span.finish();
 		return o;
 	}	
 

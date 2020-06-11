@@ -1,5 +1,8 @@
 package org.meetup.openshift.rhoar.orders.controller;
 
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -19,10 +22,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.jayway.restassured.RestAssured;
+import io.restassured.RestAssured;
 
-import static com.jayway.restassured.RestAssured.when;
-import static org.hamcrest.CoreMatchers.is;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(

@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.Test;
@@ -20,8 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.uber.jaeger.Configuration;
-
+import io.jaegertracing.Configuration;
 import io.opentracing.Tracer;
 
 @RunWith(SpringRunner.class)
@@ -73,8 +73,8 @@ public class OrderServiceTest {
 		
 		item.setOrder(shallowOrder);
 		
-		Mockito.when(repository.findOne(new Long (1)))
-	      .thenReturn(SerializationUtils.clone(o))	;
+		Mockito.when(repository.findById(new Long (1)))
+	      .thenReturn(Optional.of(SerializationUtils.clone(o)));
 		
 		//when
 		Order found = service.findById(new Long(1));
@@ -87,8 +87,8 @@ public class OrderServiceTest {
 	@Test
 	public void findByIdNonExistingTest() {
 		//given
-		Mockito.when(repository.findOne(new Long (1)))
-	      .thenReturn(null);
+		Mockito.when(repository.findById(new Long (1)))
+	      .thenReturn(Optional.empty());
 		
 		//when
 		Order found = service.findById(new Long(1));

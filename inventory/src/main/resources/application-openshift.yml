@@ -1,0 +1,23 @@
+quarkus:
+  kubernetes-client:
+    trust-certs: true
+  s2i:
+    base-jvm-image: registry.access.redhat.com/openjdk/openjdk-11-rhel7
+  openshift:
+    expose: true
+  hibernate-orm:
+    database:
+      generation: drop-and-create
+    sql-load-script: load.sql
+  datasource:
+    db-kind: postgresql
+    username: customers
+    password: customers
+    jdbc:
+      url: jdbc:postgresql://postgresql-inventory.rhoar.svc:5432/inventory
+  log:
+    level: INFO
+  jaeger:
+    endpoint: http://jaeger-collector.rhoar.svc:14268/api/traces
+    sampler-type: const
+    sampler-param: 1

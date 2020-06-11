@@ -24,14 +24,14 @@ public class CustomerController {
 	private static Logger logger = Logger.getLogger( CustomerController.class.getName() );
 	
 	@Inject
-	private ICustomerService customerService;
+	ICustomerService customerService;
 	
 	@Inject
 	Tracer tracer;
 	
 	@GET
     @Path("/{id}")
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Produces(MediaType.APPLICATION_JSON)
     public Customer getById(@PathParam("id") Long id) {
 		Customer c;
 		/* Use a try-with-resources block to ensure that the active span
@@ -45,6 +45,7 @@ public class CustomerController {
 			if (c == null) {
 				throw new ResourceNotFoundException("Customer not found");
 			}
+			logger.debug("Returning customer: " + c.toString());
 		}
 		return c;   
     }

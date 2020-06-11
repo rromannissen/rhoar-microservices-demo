@@ -6,8 +6,8 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jboss.logging.Logger;
-import org.meetup.openshift.rhoar.inventory.dao.IProductDAO;
 import org.meetup.openshift.rhoar.inventory.model.Product;
+import org.meetup.openshift.rhoar.inventory.repository.ProductRepository;
 
 import io.opentracing.Span;
 import io.opentracing.Tracer;
@@ -19,7 +19,7 @@ public class ProductService implements IProductService {
 	private static Logger logger = Logger.getLogger( ProductService.class.getName() );
 	
 	@Inject
-	private IProductDAO productDAO;
+	ProductRepository repository;
 	
 	@Inject
 	Tracer tracer;
@@ -33,7 +33,7 @@ public class ProductService implements IProductService {
 		Span childSpan = tracer.buildSpan("findById").start();
 		childSpan.setTag("layer", "Service");
 		logger.debug("Entering ProductService.findById()");
-		Product p = productDAO.findById(id);
+		Product p = repository.findById(id);
 		childSpan.finish();
 		return p;
 	}

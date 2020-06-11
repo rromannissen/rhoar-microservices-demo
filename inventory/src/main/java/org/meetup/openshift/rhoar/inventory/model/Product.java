@@ -1,7 +1,5 @@
 package org.meetup.openshift.rhoar.inventory.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,11 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+
 @Entity
 @Table(name = "products")
-public class Product implements Serializable{
-	
-	private static final long serialVersionUID = -3915785560479349312L;
+public class Product extends PanacheEntityBase {
 	
 	@Id
     @SequenceGenerator(

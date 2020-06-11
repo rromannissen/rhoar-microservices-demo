@@ -1,19 +1,46 @@
 # Microservices with RHOAR demo
 
-This repository contains the source code used as demo for the talk **Openshift Reloaded: Microservices 2.0 with RHOAR"** held at the Openshift Madrid Meetup in February 22nd, 2018 (slides [here](https://www.slideshare.net/rromannissen/openshift-reloaded-microservices-20-with-rhoar)). The aim of this demo is to showcase the features included in Red Hat Openshift Application Runtimes, focusing on Spring Boot and Wildfly Swarm. Instead of presenting a complex use case, the demo focuses on all the wiring and configuration required to enable all RHOAR's answers to several of Microservices' challenges (distributed tracing, externalized configuration, circuit breaker...) using the latest GA available.
+> **WARNING**: This is an unstable branch. Work in progress.
+
+This repository was originally intended to contain the source code used as demo for the talk **Openshift Reloaded: Microservices 2.0 with RHOAR"** held at the Openshift Madrid Meetup in February 22nd, 2018 (slides [here](https://www.slideshare.net/rromannissen/openshift-reloaded-microservices-20-with-rhoar)). This demo has now been updated to adapt to the latest GA available of RHOAR and replace all services build using Wildfly Swarm with the Red Hat build of Quarkus.
+
+The aim of this demo is to showcase the features included in Red Hat Openshift Application Runtimes, focusing on Spring Boot and Quarkus. Instead of presenting a complex use case, the demo focuses on all the wiring and configuration required to enable all RHOAR's answers to several of Microservices' challenges (distributed tracing, externalized configuration, circuit breaker...) using the latest GA available.
+
+Source code for the original demo can still be found in the [tag 1.0-meetup in this repository](https://github.com/rromannissen/rhoar-microservices-demo/tree/1.0-meetup).
+
+## What's new
+
+- **Spring**:
+  - Updated to Spring Boot 2.1.13 using the Snowdrop supported BOM.
+  - Replaced JAX-RS with Spring MVC in Spring Boot services.
+  - Removed all boilerplate code to setup and configure Opentracing. Used the opentracing-spring-jaeger-web-starter starter instead.
+  - Replaced spring-cloud-starter-hystrix with spring-cloud-starter-netflix-hystrix.
+
+- **Quarkus**:
+  - Migrated all Wildfly Swarm services to the Red Hat build of Quarkus 1.3.
+  - Adapted persistence code to Panache and implemented the Repository pattern.
+  - Removed all boilerplate code to setup and configure Opentracing. Used the quarkus-smallrye-opentracing extension instead.
+  - Removed the custom health endpoint and replaced it with the quarkus-smallrye-health extension instead.
+  - Used package-private instead of private members in beans [following Quarkus recommendations](https://quarkus.io/guides/cdi-reference#native-executables-and-private-members).
+  - Removed Arquillian for testing and used quarkus-junit5 instead. Once the Red Had build of Quarkus 1.4 is released, tests could be further simplified by [using the quarkus-junit5-mockito extension and the @InjectMock annotation](https://quarkus.io/guides/getting-started-testing#further-simplification-with-injectmock).
 
 ## Architecture
 
 The demo includes 4 microservices:
 
-- **Customers**: Stores all customer related data. Developed using Wildfly Swarm and PostgreSQL as data store.
-- **Inventory**: Stores detailed information about products. It uses the Wildfly/PostgreSQL stack as well.
+- **Customers**: Stores all customer related data. Developed using Quarkus and PostgreSQL as data store.
+- **Inventory**: Stores detailed information about products. It uses the Quarkus/PostgreSQL stack as well.
 - **Orders**: Manages all order related entities. It stores only UIDs to refer to Products and Customers. Implemented with Spring Boot and using a PostgreSQL database.
 - **Gateway**: Access and aggregation layer for the whole application. It gets orders data and aggregates Products and Customers detailed information. Also implemented with the Spring Boot/PostgreSQL stack.
 
 ![Architecture Screenshot](docs/images/basic_architecture.png?raw=true "Architecture Diagram")
 
 It can be argued that the domain is too fine grained for the modeled business, or that the approach is not optimal for data aggregation. While these statements might be true, the focus on the demo was to present a simple case with microservices interacting with each other, and shouldn't be considered a design aimed for a production solution.
+
+
+## TODO
+
+All following sections are to be remade for Helm templates and ArgoCD based deployment in OCP. Instructions are not up to date and may fail.
 
 ## Configuration
 
