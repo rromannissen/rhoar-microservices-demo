@@ -2,16 +2,16 @@
 
 > **WARNING**: This is an unstable branch. Work in progress.
 
-This repository was originally intended to contain the source code used as demo for the talk **Openshift Reloaded: Microservices 2.0 with RHOAR"** held at the Openshift Madrid Meetup in February 22nd, 2018 (slides [here](https://www.slideshare.net/rromannissen/openshift-reloaded-microservices-20-with-rhoar)). This demo has now been updated to adapt to the latest GA available of RHOAR and replace all services build using Wildfly Swarm with the Red Hat build of Quarkus.
+This repository was originally intended to contain the source code used as demo for the talk **Openshift Reloaded: Microservices 2.0 with RHOAR"** held at the Openshift Madrid Meetup in February 22nd, 2018 (slides [here](https://www.slideshare.net/rromannissen/openshift-reloaded-microservices-20-with-rhoar)). This demo has now been updated to adapt to [the latest GA available of Red Hat Runtimes](https://www.redhat.com/en/blog/latest-updates-red-hat-runtimes) and replace all services built using Wildfly Swarm with the Red Hat build of Quarkus.
 
-The aim of this demo is to showcase the features included in Red Hat Openshift Application Runtimes, focusing on Spring Boot and Quarkus. Instead of presenting a complex use case, the demo focuses on all the wiring and configuration required to enable all RHOAR's answers to several of Microservices' challenges (distributed tracing, externalized configuration, circuit breaker...) using the latest GA available.
+The aim of this demo is to showcase the features included in Red Hat Runtimes, focusing on Spring Boot and Quarkus. Instead of presenting a complex use case, the demo focuses on all the wiring and configuration required to enable all Red Hat Runtimes' answers to several of Microservices' challenges (distributed tracing, externalized configuration, circuit breaker...) using the latest GA available.
 
 Source code for the original demo can still be found in the [tag 1.0-meetup in this repository](https://github.com/rromannissen/rhoar-microservices-demo/tree/1.0-meetup).
 
 ## What's new
 
 - **Spring**:
-  - Updated to Spring Boot 2.1.13 using the Snowdrop supported BOM.
+  - Updated to Spring Boot 2.2.6 using the Snowdrop supported BOM.
   - Replaced JAX-RS with Spring MVC in Spring Boot services.
   - Removed all boilerplate code to setup and configure Opentracing. Used the opentracing-spring-jaeger-web-starter starter instead.
   - Replaced spring-cloud-starter-hystrix with spring-cloud-starter-netflix-hystrix.

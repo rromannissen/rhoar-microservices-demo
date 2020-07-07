@@ -2,6 +2,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+		
+	<parent>
+		<groupId>dev.snowdrop</groupId>
+		<artifactId>snowdrop-dependencies</artifactId>
+		<version>2.2.6.SP1-redhat-00001</version>
+	</parent>
+	
 	<groupId>org.meetup.openshift.rhoar</groupId>
 	<artifactId>orders</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
@@ -9,28 +16,15 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven-failsafe-plugin.version>2.22.1</maven-failsafe-plugin.version>
 		<arquillian.version>1.4.0.Final</arquillian.version>
-		<arquillian-cube.version>1.15.3</arquillian-cube.version>
-		<awaitility.version>3.1.0</awaitility.version>
+		<arquillian-cube.version>1.18.2</arquillian-cube.version>
 		<openjdk18-openshift.version>latest</openjdk18-openshift.version>
-		<openshift-client.version>3.1.8</openshift-client.version>
-		<rest-assured.version>3.1.0</rest-assured.version>
-		<spring-boot.version>2.1.13.RELEASE</spring-boot.version>
-		<spring-boot-bom.version>2.1.13.Final-redhat-00001</spring-boot-bom.version>
+		<spring-boot.version>2.2.6.RELEASE</spring-boot.version>
 		<fabric8.generator.from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:${openjdk18-openshift.version}</fabric8.generator.from>
-		<fabric8-maven-plugin.version>4.1.0</fabric8-maven-plugin.version>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>me.snowdrop</groupId>
-				<artifactId>spring-boot-bom</artifactId>
-				<version>${spring-boot-bom.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
 			<dependency>
 				<groupId>org.jboss.arquillian</groupId>
 				<artifactId>arquillian-bom</artifactId>
@@ -44,21 +38,6 @@
 				<version>${arquillian-cube.version}</version>
 				<scope>import</scope>
 				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>io.fabric8</groupId>
-				<artifactId>openshift-client</artifactId>
-				<version>${openshift-client.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.rest-assured</groupId>
-				<artifactId>rest-assured</artifactId>
-				<version>${rest-assured.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.awaitility</groupId>
-				<artifactId>awaitility</artifactId>
-				<version>${awaitility.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -134,7 +113,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring-boot.version}</version>
 				<configuration>
 					<profiles>
 						<profile>local</profile>
