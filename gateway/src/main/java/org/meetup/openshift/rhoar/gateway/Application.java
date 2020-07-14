@@ -39,10 +39,10 @@ public class Application
       return new HystrixCommandAspect();
     }
     
-    @Bean
-    TracingConcurrencyStrategy hystrixTracingConcurrencyStrategy() {
-      return TracingConcurrencyStrategy.register(tracer);
-    }
+//    @Bean
+//    TracingConcurrencyStrategy hystrixTracingConcurrencyStrategy() {
+//      return TracingConcurrencyStrategy.register(tracer);
+//    }
 	
 	
 }
