@@ -5,7 +5,7 @@ simple-java-service:
   targetPort: 8080
   deploymentStrategy:
     type: Rolling
-    timeout: 180
+    timeout: 240
     rollingUpdatePeriod: 1
     rollingInterval: 1
     rollingMaxSurge: 25%
