@@ -1,4 +1,4 @@
-# Microservices with RHOAR demo
+# Microservices with Red Hat Runtimes demo
 
 > **WARNING**: This is an unstable branch. Work in progress.
 
@@ -37,10 +37,76 @@ The demo includes 4 microservices:
 
 It can be argued that the domain is too fine grained for the modeled business, or that the approach is not optimal for data aggregation. While these statements might be true, the focus on the demo was to present a simple case with microservices interacting with each other, and shouldn't be considered a design aimed for a production solution.
 
+## Setup
+
+This demo has been developed using the following setup:
+
+- Openshift Container Platform 4.4
+- OpenShift Pipelines Operator 1.0.1 (Tekton 0.11.3)
+- ArgoCD Operator 0.0.11
+
+Other setups may work as well, but Tekton 0.11.x or later is required for the pipeline and tasks to work.
 
 ## TODO
 
 All following sections are to be remade for Helm templates and ArgoCD based deployment in OCP. Instructions are not up to date and may fail.
+
+## Deployment Pipeline in OCP
+
+### Accessing registry.redhat.io
+
+All components use the [OpenJDK 11 Image for Java Applications on RHEL8](https://catalog.redhat.com/software/containers/openjdk/openjdk-11-rhel8/5cd2aedebed8bd5717d3c46a) image available in registry.redhat.io. As [this registry requires authentication](https://access.redhat.com/RegistryAuthentication), a service account linked to a pull secret for the registry is required to pull images from it in the buildah task [as stated in the Tekton documentation](https://github.com/tektoncd/pipeline/blob/v0.11.3/docs/auth.md#kubernetess-docker-registrys-secret). For this, the definition of a Service Account named build-bot has been included as a YAML file in the tekton directory of this repository. In order for it to work, first create a [registry service account for registry.redhat.io using a Red Hat account](https://access.redhat.com/terms-based-registry/) and download the associated pull secret, which should look similar to this:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-red-hat-account-pull-secret
+data:
+  .dockerconfigjson:
+  <contents of the generated config.json file in base64>
+type: kubernetes.io/dockerconfigjson
+
+```
+
+Once the file is downloaded, create the secret in OCP with the following command:
+
+```
+oc create -f my-red-hat-account-pull-secret.yaml
+
+```
+
+With the secret created, edit the build-bot-sa.yaml file to include it in the secrets list for the service account:
+
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: build-bot
+secrets:
+  - name: my-red-hat-account-pull-secret
+
+```
+
+Then, create the service account by executing:
+
+```
+oc create -f build-bot-sa.yaml
+
+```
+
+Take into account that the service account will be bound to the namespace in which it was created
+
+### Pushing to the OCP internal registry
+
+Given the pipeline will be executed using the build-bot service account, [granting permission for that account to push to the OCP internal registry is required](https://docs.openshift.com/container-platform/4.4/registry/accessing-the-registry.html). Once the service account has been created as specified in the previous section, simply assign the registry-editor role by executing the following command:
+
+```
+oc policy add-role-to-user registry-view system:serviceaccount:<NAMESPACE IN WHICH THE SA WAS CREATED>:build-bot
+
+```
+
 
 ## Configuration
 
@@ -93,7 +159,7 @@ Applications can also run locally for testing purposes. In this case, the comman
 mvn clean spring-boot:run -P local
 ```
 
-For Wildfly Swarm, the command is the following:
+For Quarkus, the command is the following:
 
 ```
 mvn clean wildfly-swarm:run -P local

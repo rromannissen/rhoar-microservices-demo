@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgresql-orders:5432/orders
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+
+endpoints:
+  enabled: true
+
+opentracing:
+  jaeger:
+    udp-sender:
+      host: jaeger-collector
+      port: 14268

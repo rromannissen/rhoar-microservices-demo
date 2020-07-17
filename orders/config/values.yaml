@@ -1,0 +1,21 @@
+simple-java-service:
+  applicationName: orders
+  version: "368412f"
+  port: 8080
+  targetPort: 8080
+  deploymentStrategy:
+    type: rolling
+    timeout: 300
+    rollingUpdatePeriod: 1
+    rollingInterval: 1
+    rollingMaxSurge: 25%
+    rollingMaxUnavailable: 20%
+  replicaCount: 1
+  health:
+    livenessEndpoint: /health
+    readinessEndpoint: /health
+    probeDelay: 30
+    probePeriod: 10
+    probeTimeout: 2
+  imageURL: ""
+  env: []
