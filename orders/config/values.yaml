@@ -17,5 +17,5 @@ simple-java-service:
     probeDelay: 30
     probePeriod: 10
     probeTimeout: 2
-  imageURL: ""
+  imageURL: "image-registry.openshift-image-registry.svc:5000/order-management/orders"
   env: []

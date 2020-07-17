@@ -66,14 +66,12 @@ data:
   .dockerconfigjson:
   <contents of the generated config.json file in base64>
 type: kubernetes.io/dockerconfigjson
-
 ```
 
 Once the file is downloaded, create the secret in OCP with the following command:
 
 ```
 oc create -f my-red-hat-account-pull-secret.yaml
-
 ```
 
 With the secret created, edit the build-bot-sa.yaml file to include it in the secrets list for the service account:
@@ -86,14 +84,12 @@ metadata:
   name: build-bot
 secrets:
   - name: my-red-hat-account-pull-secret
-
 ```
 
 Then, create the service account by executing:
 
 ```
 oc create -f build-bot-sa.yaml
-
 ```
 
 Take into account that the service account will be bound to the namespace in which it was created
@@ -104,7 +100,6 @@ Given the pipeline will be executed using the build-bot service account, [granti
 
 ```
 oc policy add-role-to-user registry-view system:serviceaccount:<NAMESPACE IN WHICH THE SA WAS CREATED>:build-bot
-
 ```
 
 
