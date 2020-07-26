@@ -43,13 +43,51 @@ This demo has been developed using the following setup:
 
 - Openshift Container Platform 4.4
 - OpenShift Pipelines Operator 1.0.1 (Tekton 0.11.3)
-- ArgoCD Operator 0.0.11
+- ArgoCD Operator 0.0.12
 
 Other setups may work as well, but Tekton 0.11.x or later is required for the pipeline and tasks to work.
 
 ## TODO
 
 All following sections are to be remade for Helm templates and ArgoCD based deployment in OCP. Instructions are not up to date and may fail.
+
+## Setting up Argo CD
+
+### Installing the Argo CD Operator
+
+First of all, install [the Argo CD Operator for Kubernetes](https://github.com/argoproj-labs/argocd-operator). This can be easily done in OpenShift 4 using the OperatorHub by installing the "Argo CD" operator from the catalog, not to be confused with "Argo CD Operator (Helm)". This operator will be bound to the namespace in which it was installed, which will usually be "argocd".
+
+### Installing an Argo CD instance
+
+To install a simple Argo CD instance with routes enabled, simply use the descriptor available in the argocd directory of this repository:
+
+```
+oc create -f argocd-route.yaml
+```
+
+After installation is finished, the password for the "admin" account can be found in the admin.password key from the argocd-cluster secret from the target namespace in which the Argo CD instance was created.
+
+Argo CD must be able to create and modify Kubernetes object in the target deployment namespace for the application, so the argocd service account must be granted the "edit" role on that project:
+
+```
+oc policy add-role-to-user edit system:serviceaccount:argocd:argocd-application-controller -n <TARGET DEPLOYMENT NAMESPACE>
+```
+
+Finally, in order to simplify interaction with the Argo CD instance, install the ArgoCD CLI following [the instructions available in the official documentation.](https://argoproj.github.io/argo-cd/cli_installation/#linux)
+
+
+### Adding the simple-java-service repository to Argo CD
+
+All application charts have a dependency on the simple-java-service chart, which is published in a Helm Repository hosted in GitHub pages. Argo CD will need to obtain this chart in order to render configuration from the Helm templates, so the repository has to be added to its configuration. This can be easily done by running this command after logging in to you Argo CD server instance:
+
+```
+argocd repo add https://rromannissen.github.io/simple-java-service/docs --type helm --name simple-java-service
+```
+
+
+### Creating an application in Argo CD
+
+
 
 ## Deployment Pipeline in OCP
 
@@ -99,7 +137,7 @@ Take into account that the service account will be bound to the namespace in whi
 Given the pipeline will be executed using the build-bot service account, [granting permission for that account to push to the OCP internal registry is required](https://docs.openshift.com/container-platform/4.4/registry/accessing-the-registry.html). Once the service account has been created as specified in the previous section, simply assign the registry-editor role by executing the following command:
 
 ```
-oc policy add-role-to-user registry-view system:serviceaccount:<NAMESPACE IN WHICH THE SA WAS CREATED>:build-bot
+oc policy add-role-to-user registry-editor system:serviceaccount:<NAMESPACE IN WHICH THE SA WAS CREATED>:build-bot
 ```
 
 
