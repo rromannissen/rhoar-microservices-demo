@@ -5,6 +5,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+      temp:
+        use_jdbc_metadata_defaults: false
 
 
 endpoints:
