@@ -239,6 +239,8 @@ mvn clean wildfly-swarm:run -P local
 
 ## Distributed Tracing
 
+JAEGER OPERATOR
+
 All microservices are based on the Opentracing API for distributed tracing, using the Jaeger implementation for that.
 
 In order to have a Jaeger instance running in OCP, [the development template available in the official Jaeger Github site](https://github.com/jaegertracing/jaeger-openshift#development-setup) was used.

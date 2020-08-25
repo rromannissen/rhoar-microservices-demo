@@ -13,5 +13,5 @@ endpoints:
 opentracing:
   jaeger:
     udp-sender:
-      host: jaeger-collector
+      host: jaeger-all-in-one-inmemory-collector
       port: 14268
