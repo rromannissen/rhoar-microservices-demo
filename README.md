@@ -51,6 +51,96 @@ Other setups may work as well, but Tekton 0.11.x or later is required for the pi
 
 All following sections are to be remade for Helm templates and ArgoCD based deployment in OCP. Instructions are not up to date and may fail.
 
+## Deployment Pipeline in OCP
+
+![Pipeline Screenshot](docs/images/pipeline.png?raw=true "Pipeline Diagram")
+
+
+### The build-bot service account
+
+The pipeline available in this repository accesses several external systems such as Git repositories and image repositories. In order to enable authentication in those resources, the definition of a Service Account named build-bot has been included as a YAML file in the tekton directory of this repository. This service account will have to be bound to several secrets as explained in the following points for the pipeline to work properly.
+
+#### Pushing to a Git repository with credentials
+
+As the pipeline requires pushing to a Git repository to update manifests and trigger Argo CD synchronizations, it is necessary to provide credentials for the git related tasks (in this case the update-manifest task). For this, a secret has to be created with valid credentials to push to the application repository. This secret [requires a concrete format for Tekton to create the git credentials in the containers properly](https://github.com/tektoncd/pipeline/blob/v0.11.3/docs/auth.md#basic-authentication-git), and a YAML file with its definition has been included as well in the tekton directory of this repository, looking as follows:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: git-user-pass
+  annotations:
+    tekton.dev/git-0: <REPOSITORY DOMAIN, FOR EXAMPLE https://github.com>
+type: kubernetes.io/basic-auth
+stringData:
+  username: <USERNAME WITH PERMISSION TO PUSH TO THE TARGET REPOSITORY>
+  password: <PASSWORD>
+```
+
+Edit the file and enter valid credentials for your repository and its domain (for example https://github.com if it is hosted in GitHub).
+
+#### Accessing registry.redhat.io
+
+All components use the [OpenJDK 11 Image for Java Applications on RHEL8](https://catalog.redhat.com/software/containers/openjdk/openjdk-11-rhel8/5cd2aedebed8bd5717d3c46a) image available in registry.redhat.io. As [this registry requires authentication](https://access.redhat.com/RegistryAuthentication), a service account linked to a pull secret for the registry is required to pull images from it in the buildah task [as stated in the Tekton documentation](https://github.com/tektoncd/pipeline/blob/v0.11.3/docs/auth.md#kubernetess-docker-registrys-secret). In order for it to work, first create a [registry service account for registry.redhat.io using a Red Hat account](https://access.redhat.com/terms-based-registry/) and download the associated pull secret, which should look similar to this:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-red-hat-account-pull-secret
+data:
+  .dockerconfigjson:
+  <contents of the generated config.json file in base64>
+type: kubernetes.io/dockerconfigjson
+```
+
+Once the file is downloaded, create the secret in OCP with the following command:
+
+```
+oc create -f my-red-hat-account-pull-secret.yaml
+```
+
+#### Setting up the build-bot service account
+
+
+With the secret created, edit the build-bot-sa.yaml file to include it in the secrets list for the service account:
+
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: build-bot
+secrets:
+  - name: my-red-hat-account-pull-secret
+  - name: git-user-pass
+```
+
+Take into account that the git-user-pass secret has already been included in the build-bot-sa.yaml file available in this repository.
+
+### Creating all resources
+
+Once the build-bot and its associated secrets have been edited following the instructions of the previous points, all pipeline resources can be created easily with a single command. From the root directory of this repository, execute the following command:
+
+```
+oc create -f ./tekton
+```
+
+Take into account that the build-bot service account will be bound to the namespace in which it was created
+
+### Pushing to the OCP internal registry
+
+Given the pipeline will be executed using the build-bot service account, [granting permission for that account to push to the OCP internal registry is required](https://docs.openshift.com/container-platform/4.4/registry/accessing-the-registry.html). Once the service account has been created as specified in the previous section, simply assign the registry-editor role by executing the following command:
+
+```
+oc policy add-role-to-user registry-editor system:serviceaccount:<NAMESPACE IN WHICH THE SA WAS CREATED>:build-bot
+```
+
+### Running the pipeline
+
+tkn pipeline start deploy-pipeline --serviceaccount build-bot
+
+
 ## Setting up Argo CD
 
 ### Installing the Argo CD Operator
@@ -88,57 +178,6 @@ argocd repo add https://rromannissen.github.io/simple-java-service/docs --type h
 ### Creating an application in Argo CD
 
 
-
-## Deployment Pipeline in OCP
-
-### Accessing registry.redhat.io
-
-All components use the [OpenJDK 11 Image for Java Applications on RHEL8](https://catalog.redhat.com/software/containers/openjdk/openjdk-11-rhel8/5cd2aedebed8bd5717d3c46a) image available in registry.redhat.io. As [this registry requires authentication](https://access.redhat.com/RegistryAuthentication), a service account linked to a pull secret for the registry is required to pull images from it in the buildah task [as stated in the Tekton documentation](https://github.com/tektoncd/pipeline/blob/v0.11.3/docs/auth.md#kubernetess-docker-registrys-secret). For this, the definition of a Service Account named build-bot has been included as a YAML file in the tekton directory of this repository. In order for it to work, first create a [registry service account for registry.redhat.io using a Red Hat account](https://access.redhat.com/terms-based-registry/) and download the associated pull secret, which should look similar to this:
-
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: my-red-hat-account-pull-secret
-data:
-  .dockerconfigjson:
-  <contents of the generated config.json file in base64>
-type: kubernetes.io/dockerconfigjson
-```
-
-Once the file is downloaded, create the secret in OCP with the following command:
-
-```
-oc create -f my-red-hat-account-pull-secret.yaml
-```
-
-With the secret created, edit the build-bot-sa.yaml file to include it in the secrets list for the service account:
-
-
-```yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: build-bot
-secrets:
-  - name: my-red-hat-account-pull-secret
-```
-
-Then, create the service account by executing:
-
-```
-oc create -f build-bot-sa.yaml
-```
-
-Take into account that the service account will be bound to the namespace in which it was created
-
-### Pushing to the OCP internal registry
-
-Given the pipeline will be executed using the build-bot service account, [granting permission for that account to push to the OCP internal registry is required](https://docs.openshift.com/container-platform/4.4/registry/accessing-the-registry.html). Once the service account has been created as specified in the previous section, simply assign the registry-editor role by executing the following command:
-
-```
-oc policy add-role-to-user registry-editor system:serviceaccount:<NAMESPACE IN WHICH THE SA WAS CREATED>:build-bot
-```
 
 
 ## Configuration

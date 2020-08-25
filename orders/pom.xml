@@ -173,11 +173,12 @@
 				<dependency>
 					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
-					<version>${postgresql.version}</version>
 					<scope>runtime</scope>
 				</dependency>
 			</dependencies>
-			<activation />
+			<activation>
+        		<activeByDefault>true</activeByDefault>
+    		</activation>
 			<build>
 				<plugins>
 					<plugin>
