@@ -157,8 +157,7 @@
 	<profiles>
 		<profile>
 			<id>local</id>
-			<activation>
-			</activation>
+			<activation />
 			<dependencies>
 				<dependency>
 					<groupId>com.h2database</groupId>
@@ -179,6 +178,17 @@
 			<activation>
         		<activeByDefault>true</activeByDefault>
     		</activation>
+		</profile>
+		<profile>
+			<id>openshift-manual</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+					<scope>runtime</scope>
+				</dependency>
+			</dependencies>
+    		<activation />
 			<build>
 				<plugins>
 					<plugin>
