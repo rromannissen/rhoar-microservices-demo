@@ -12,8 +12,8 @@ simple-java-service:
     rollingMaxUnavailable: 20%
   replicaCount: 1
   health:
-    livenessEndpoint: /actuator/health
-    readinessEndpoint: /actuator/health
+    livenessEndpoint: /health/live
+    readinessEndpoint: /health/ready
     probeDelay: 30
     probePeriod: 10
     probeTimeout: 2
