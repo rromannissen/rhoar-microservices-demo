@@ -273,7 +273,9 @@ metadata:
   name: jaeger-all-in-one-inmemory
 ```
 
-## Known bugs
+## Known issues
+
+### SQLFeatureNotSupportedException exception at startup
 
 The following exception is displayed at startup for the Orders service:
 
@@ -282,3 +284,5 @@ java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnectio
 ```
 
 This is caused by [an issue in Hibernate that has been fixed in version 5.4.x](https://hibernate.atlassian.net/browse/HHH-12368). Since the Hibernate version used for the Orders service is 5.3.14, a warning is displayed including the full stack trace for this exception. Although annoying, this warning is harmless for this example and can be ignored.
+
+### Quarkus Kubernetes Config extension not available in 1.3.x
