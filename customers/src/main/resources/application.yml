@@ -3,10 +3,8 @@ quarkus:
     trust-certs: true
   kubernetes-config:
     enabled: true
-  s2i:
-    base-jvm-image: registry.access.redhat.com/openjdk/openjdk-11-rhel7
-  openshift:
-    expose: true
+    config-maps:
+      - customers-config
   hibernate-orm:
     database:
       generation: drop-and-create
