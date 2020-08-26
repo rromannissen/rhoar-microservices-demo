@@ -239,8 +239,25 @@ mvn clean wildfly-swarm:run -P local
 
 ## Distributed Tracing
 
-JAEGER OPERATOR
-
 All microservices are based on the Opentracing API for distributed tracing, using the Jaeger implementation for that.
 
-In order to have a Jaeger instance running in OCP, [the development template available in the official Jaeger Github site](https://github.com/jaegertracing/jaeger-openshift#development-setup) was used.
+In order to have a Jaeger instance running in OCP, [the Red Hat OpenShift Jaeger operator available in the Operator Hub](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.4/html-single/jaeger/index#jaeger-operator-install_jaeger-install) has been used for this demo.
+
+Once the operator has been installed, creating a simple Jaeger instance intended for demo purposes is as easy as instantiating the following object:
+
+```
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: jaeger-all-in-one-inmemory
+```
+
+## Known bugs
+
+The following exception is displayed at startup for the Orders service:
+
+```
+java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
+```
+
+This is caused by [an issue in Hibernate that has been fixed in version 5.4.x](https://hibernate.atlassian.net/browse/HHH-12368). Since the Hibernate version used for the Orders service is 5.3.14, a warning is displayed including the full stack trace for this exception. Although annoying, this warning is harmless for this example and can be ignored.

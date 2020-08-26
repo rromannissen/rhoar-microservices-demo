@@ -9,10 +9,6 @@ spring:
         lob:
           non_contextual_creation: true
 
-
-endpoints:
-  enabled: true
-
 opentracing:
   jaeger:
     http-sender:
