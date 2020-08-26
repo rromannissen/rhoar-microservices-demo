@@ -1,6 +1,6 @@
 simple-java-service:
   applicationName: gateway
-  version: "0036951"
+  version: "13c65ab"
   port: 8080
   targetPort: 8080
   deploymentStrategy:
