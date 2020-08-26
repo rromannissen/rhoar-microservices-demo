@@ -14,7 +14,7 @@ import com.netflix.hystrix.contrib.javanica.aop.aspectj.HystrixCommandAspect;
 public class Application
 {
 	
-	@Value("${jaeger.endpoint}")
+	@Value("${opentracing.jaeger.http-sender.url}")
 	String jaegerEndpoint;
 	
 	public static void main(String[] args) {

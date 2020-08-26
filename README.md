@@ -177,7 +177,28 @@ argocd repo add https://rromannissen.github.io/simple-java-service/docs --type h
 
 ### Creating an application in Argo CD
 
+Once the operator is installed and an Argo CD instance managed by it is running, it is very easy to create Argo applications using the available CRDs. For example, for the orders service we would have:
 
+```
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: orders
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/rromannissen/rhoar-microservices-demo.git
+    targetRevision: master
+    path: orders/config
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: order-management
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
 
 
 ## Configuration
