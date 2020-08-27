@@ -3,20 +3,19 @@ quarkus:
     trust-certs: true
   kubernetes-config:
     enabled: true
-  s2i:
-    base-jvm-image: registry.access.redhat.com/openjdk/openjdk-11-rhel7
-  openshift:
-    expose: true
+    config-maps:
+      - inventory-config
   hibernate-orm:
     database:
       generation: drop-and-create
     sql-load-script: load.sql
   datasource:
-    db-kind: h2
-    username: sa
-    password: sa
+    db-kind: postgresql   
+    username: inventory
+    password: inventory
     jdbc:
-      url: jdbc:h2:mem:inventory;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      url: jdbc:postgresql://localhost:5432/inventory
+  
   log:
     level: INFO
     category:
@@ -26,3 +25,10 @@ quarkus:
     endpoint: http://jaeger-collector.rhoar.svc:14268/api/traces
     sampler-type: const
     sampler-param: 1
+
+"%test":
+  quarkus:
+    datasource:    
+      db-kind: h2
+      jdbc:
+        url: jdbc:h2:mem:inventory;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
