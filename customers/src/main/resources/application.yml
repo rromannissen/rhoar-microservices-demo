@@ -10,11 +10,12 @@ quarkus:
       generation: drop-and-create
     sql-load-script: load.sql
   datasource:
-    db-kind: h2
-    username: sa
-    password: sa
+    db-kind: postgresql   
+    username: customers
+    password: customers
     jdbc:
-      url: jdbc:h2:mem:customers;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      url: jdbc:postgresql://localhost:5432/customers
+      
   log:
     level: INFO
     category:
@@ -24,3 +25,10 @@ quarkus:
     endpoint: http://jaeger-collector.rhoar.svc:14268/api/traces
     sampler-type: const
     sampler-param: 1
+
+"%test":
+  quarkus:
+    datasource:    
+      db-kind: h2
+      jdbc:
+        url: jdbc:h2:mem:customers;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
