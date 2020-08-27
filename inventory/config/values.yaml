@@ -1,6 +1,6 @@
 simple-java-service:
   applicationName: inventory
-  version: "03832ca"
+  version: "2e55870"
   port: 8080
   targetPort: 8080
   deploymentStrategy:
