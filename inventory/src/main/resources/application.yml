@@ -26,6 +26,14 @@ quarkus:
     sampler-type: const
     sampler-param: 1
 
+"%dev":
+  quarkus:
+    datasource:    
+      db-kind: h2
+      jdbc:
+        url: jdbc:h2:mem:inventory;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+
+
 "%test":
   quarkus:
     datasource:    
