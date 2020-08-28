@@ -1,4 +1,4 @@
-# Microservices with Red Hat Runtimes demo
+# GitOps for Microservices with Red Hat Runtimes demo
 
 > **WARNING**: This is an unstable branch. Work in progress.
 
@@ -6,9 +6,11 @@ This repository was originally intended to contain the source code used as demo 
 
 The aim of this demo is to showcase the features included in Red Hat Runtimes, focusing on Spring Boot and Quarkus. Instead of presenting a complex use case, the demo focuses on all the wiring and configuration required to enable all Red Hat Runtimes' answers to several of Microservices' challenges (distributed tracing, externalized configuration, circuit breaker...) using the latest GA available.
 
-Another focus area is to provide an example of a modern approach to CI/CD using a GitOps paradigm. For that, a deployment pipeline based in new technologies such as [Tekton](https://github.com/tektoncd/pipeline) and [ArgoCD](https://argoproj.github.io/argo-cd/) has been included as well, adding a configuration model based on [Helm Charts](https://helm.sh/). 
+Another focus area is to provide an example of a modern approach to CI/CD using a GitOps paradigm. For that, a deployment pipeline based in new technologies such as [Tekton](https://github.com/tektoncd/pipeline) and [ArgoCD](https://argoproj.github.io/argo-cd/) has been included as well, adding a configuration model based on [Helm Charts](https://helm.sh/).
 
 Source code for the original demo can still be found in the [tag 1.0-meetup in this repository](https://github.com/rromannissen/rhoar-microservices-demo/tree/1.0-meetup).
+
+> **Note**: The best approach to work with this demo is forking this repository, since the pipeline requires write permissions in the Git repository where the application configuration is stored.
 
 ## What's new
 
