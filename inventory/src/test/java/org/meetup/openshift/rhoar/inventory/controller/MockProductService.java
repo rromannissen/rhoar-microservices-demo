@@ -5,19 +5,23 @@ import javax.enterprise.context.ApplicationScoped;
 import org.meetup.openshift.rhoar.inventory.model.Product;
 import org.meetup.openshift.rhoar.inventory.service.IProductService;
 
+import io.quarkus.test.Mock;
+
+@Mock
 @ApplicationScoped
 public class MockProductService implements IProductService {
-
+	
 	@Override
 	public Product findById(Long id) {
-		Product p = null;
-		if (id.equals(new Long(1))) {
-			p = new Product();
-			p.setId(new Long(1));
-			p.setName("Test Product Mock");
-			p.setDescription("Test Description Mock");
+		if (id == 1L) {
+			Product product = new Product();
+			product.setId(1L);
+			product.setName("Test");
+			product.setDescription("Test Product");
+		return product;
+		} else {
+			return null;
 		}
-		return p;
 	}
 
 }

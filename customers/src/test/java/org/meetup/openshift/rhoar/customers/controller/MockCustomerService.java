@@ -5,15 +5,18 @@ import javax.enterprise.context.ApplicationScoped;
 import org.meetup.openshift.rhoar.customers.model.Customer;
 import org.meetup.openshift.rhoar.customers.service.ICustomerService;
 
+import io.quarkus.test.Mock;
+
+@Mock
 @ApplicationScoped
 public class MockCustomerService implements ICustomerService{
 
 	@Override
 	public Customer findById(Long id) {
 		Customer c = null;
-		if (id.equals(new Long(1))) {
+		if (id.equals(1L)) {
 			c = new Customer();
-			c.setId(new Long(1));
+			c.setId(1L);
 			c.setUsername("mockusername");
 			c.setName("Test User Mock");
 			c.setSurname("Test Surname Mock");
@@ -24,5 +27,4 @@ public class MockCustomerService implements ICustomerService{
 		}		
 		return c;
 	}
-
 }

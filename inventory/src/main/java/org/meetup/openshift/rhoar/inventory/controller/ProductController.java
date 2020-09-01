@@ -23,7 +23,7 @@ public class ProductController {
 	private static Logger logger = Logger.getLogger( ProductController.class.getName() );
 	
 	@Inject
-	private IProductService productService;
+	IProductService productService;
 	
 	@Inject
 	Tracer tracer;

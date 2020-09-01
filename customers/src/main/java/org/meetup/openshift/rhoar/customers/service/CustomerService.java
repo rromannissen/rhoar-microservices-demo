@@ -6,8 +6,8 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.jboss.logging.Logger;
-import org.meetup.openshift.rhoar.customers.dao.ICustomerDAO;
 import org.meetup.openshift.rhoar.customers.model.Customer;
+import org.meetup.openshift.rhoar.customers.repository.CustomerRepository;
 
 import io.opentracing.Span;
 import io.opentracing.Tracer;
@@ -19,7 +19,7 @@ public class CustomerService implements ICustomerService{
 	private static Logger logger = Logger.getLogger( CustomerService.class.getName() );
 	
 	@Inject
-	private ICustomerDAO customerDAO;
+	CustomerRepository repository;
 	
 	@Inject
 	Tracer tracer;
@@ -33,9 +33,9 @@ public class CustomerService implements ICustomerService{
 		Span childSpan = tracer.buildSpan("findById").start();
 		childSpan.setTag("layer", "Service");
 		logger.debug("Entering CustomerService.findById()");
-		Customer p = customerDAO.findById(id);
+		Customer c = repository.findById(id);
 		childSpan.finish();
-		return p;
+		return c;
 	}
 	
 	

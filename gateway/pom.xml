@@ -1,30 +1,43 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
 	<parent>
-		<groupId>io.openshift</groupId>
-		<artifactId>booster-parent</artifactId>
-		<version>11</version>
+		<groupId>dev.snowdrop</groupId>
+		<artifactId>snowdrop-dependencies</artifactId>
+		<version>2.2.6.SP1-redhat-00001</version>
 	</parent>
-
+	
 	<groupId>org.meetup.openshift.rhoar</groupId>
 	<artifactId>gateway</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>2.0.0-SNAPSHOT</version>
 
 	<properties>
-		<spring-boot.bom.version>1.5.8.Final-redhat-1</spring-boot.bom.version>
-		<spring-boot.version>1.5.8.RELEASE</spring-boot.version>
-		<maven.spring-boot.plugin.version>1.5.8.RELEASE</maven.spring-boot.plugin.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<arquillian.version>1.4.0.Final</arquillian.version>
+		<arquillian-cube.version>1.18.2</arquillian-cube.version>
+		<openjdk18-openshift.version>latest</openjdk18-openshift.version>
+		<spring-boot.version>2.2.6.RELEASE</spring-boot.version>
+		<fabric8.generator.from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:${openjdk18-openshift.version}</fabric8.generator.from>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>me.snowdrop</groupId>
-				<artifactId>spring-boot-bom</artifactId>
-				<version>${spring-boot.bom.version}</version>
+				<groupId>org.jboss.arquillian</groupId>
+				<artifactId>arquillian-bom</artifactId>
+				<version>${arquillian.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.arquillian.cube</groupId>
+				<artifactId>arquillian-cube-bom</artifactId>
+				<version>${arquillian-cube.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -47,16 +60,9 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-spring-boot-starter-jaxrs</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-hystrix</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.jaxrs</groupId>
-			<artifactId>jackson-jaxrs-json-provider</artifactId>
+			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+			<version>2.1.5.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
@@ -72,21 +78,12 @@
 		</dependency>
 		<dependency>
 			<groupId>io.opentracing.contrib</groupId>
-			<artifactId>opentracing-jaxrs2</artifactId>
-			<version>0.0.12</version>
-		</dependency>
-		<dependency>
-			<groupId>io.opentracing.contrib</groupId>
-			<artifactId>opentracing-spring-web-autoconfigure</artifactId>
+			<artifactId>opentracing-spring-jaeger-web-starter</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.opentracing.contrib</groupId>
 			<artifactId>opentracing-spring-cloud-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.uber.jaeger</groupId>
-			<artifactId>jaeger-core</artifactId>
-			<version>0.21.0</version>
+			<version>0.5.4</version>
 		</dependency>
 		<!-- Testing -->
 		<dependency>
@@ -99,6 +96,21 @@
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.awaitility</groupId>
+			<artifactId>awaitility</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -106,7 +118,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring-boot.version}</version>
 				<configuration>
 					<profiles>
 						<profile>local</profile>
@@ -123,20 +134,60 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	<repositories>
+		<repository>
+			<id>redhat-early-access</id>
+			<name>Red Hat Early Access Repository</name>
+			<url>https://maven.repository.redhat.com/earlyaccess/all/</url>
+		</repository>
+		<repository>
+			<id>redhat-ga</id>
+			<name>Red Hat GA Repository</name>
+			<url>https://maven.repository.redhat.com/ga/</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>redhat-early-access</id>
+			<name>Red Hat Early Access Repository</name>
+			<url>https://maven.repository.redhat.com/earlyaccess/all/</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>redhat-ga</id>
+			<name>Red Hat GA Repository</name>
+			<url>https://maven.repository.redhat.com/ga/</url>
+		</pluginRepository>
+	</pluginRepositories>
 	<profiles>
 		<profile>
 			<id>local</id>
-			<activation>
-			</activation>
+			<activation />
 			<dependencies>
 			</dependencies>
 		</profile>
 		<profile>
 			<id>openshift</id>
 			<dependencies>
+				<dependency>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+					<scope>runtime</scope>
+				</dependency>
 			</dependencies>
-			<activation />
+			<activation>
+        		<activeByDefault>true</activeByDefault>
+    		</activation>
+		</profile>
+		<profile>
+			<id>openshift-manual</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+					<scope>runtime</scope>
+				</dependency>
+			</dependencies>
+    		<activation />
 			<build>
 				<plugins>
 					<plugin>

@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: inventory
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/rromannissen/rhoar-microservices-demo.git
+    targetRevision: quarkus-cicd
+    path: inventory/config
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: order-management
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
