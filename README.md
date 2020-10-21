@@ -43,9 +43,9 @@ It can be argued that the domain is too fine grained for the modeled business, o
 
 This demo has been developed using the following setup:
 
-- Openshift Container Platform 4.4
+- Openshift Container Platform 4.5
 - OpenShift Pipelines Operator 1.0.1 (Tekton 0.11.3)
-- ArgoCD Operator 0.0.12
+- ArgoCD Operator 0.0.14
 
 Other setups may work as well, but Tekton 0.11.x or later is required for the pipeline and tasks to work.
 
