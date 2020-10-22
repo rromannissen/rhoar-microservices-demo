@@ -1,6 +1,6 @@
 simple-java-service:
   applicationName: customers
-  version: "f78d9bc"
+  version: "203c9ba"
   port: 8080
   targetPort: 8080
   deploymentStrategy:
