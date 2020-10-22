@@ -10,12 +10,12 @@ quarkus:
       generation: drop-and-create
     sql-load-script: load.sql
   datasource:
-    db-kind: postgresql   
+    db-kind: postgresql
     username: customers
     password: customers
     jdbc:
       url: jdbc:postgresql://localhost:5432/customers
-      
+
   log:
     level: INFO
     category:
@@ -28,14 +28,18 @@ quarkus:
 
 "%dev":
   quarkus:
-    datasource:    
+    kubernetes-config:
+      enabled: false
+    datasource:
       db-kind: h2
       jdbc:
         url: jdbc:h2:mem:customers;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
 
 "%test":
   quarkus:
-    datasource:    
+    kubernetes-config:
+      enabled: false
+    datasource:
       db-kind: h2
       jdbc:
         url: jdbc:h2:mem:customers;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE

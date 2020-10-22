@@ -1,6 +1,6 @@
 # GitOps for Microservices with Red Hat Runtimes demo
 
-This repository was originally intended to contain the source code used as demo for the talk **Openshift Reloaded: Microservices 2.0 with RHOAR"** held at the Openshift Madrid Meetup in February 22nd, 2018 (slides [here](https://www.slideshare.net/rromannissen/openshift-reloaded-microservices-20-with-rhoar)). This demo has now been updated to adapt to [the latest GA available of Red Hat Runtimes](https://www.redhat.com/en/blog/latest-updates-red-hat-runtimes) and replace all services built using Wildfly Swarm with the Red Hat build of Quarkus.
+This repository was originally intended to contain the source code used as demo for the talk **Openshift Reloaded: Microservices 2.0 with RHOAR"** held at the Openshift Madrid Meetup in February 22nd, 2018 (slides [here](https://www.slideshare.net/rromannissen/openshift-reloaded-microservices-20-with-rhoar)). This demo has now been updated to adapt to [the latest GA available of Red Hat Runtimes](https://www.redhat.com/en/blog/red-hat-runtimes-update-delivers-new-features-open-hybrid-cloud) and replace all services built using Wildfly Swarm with the Red Hat build of Quarkus.
 
 The aim of this demo is to showcase the features included in Red Hat Runtimes, focusing on Spring Boot and Quarkus. Instead of presenting a complex use case, the demo focuses on all the wiring and configuration required to enable all Red Hat Runtimes' answers to several of Microservices' challenges (distributed tracing, externalized configuration, circuit breaker...) using the latest GA available.
 
@@ -109,6 +109,21 @@ All application charts have a dependency on the simple-java-service chart, which
 argocd repo add https://rromannissen.github.io/simple-java-service/docs --type helm --name simple-java-service
 ```
 
+### Creating the namespace
+
+All demo materials have been configured to use a namespace or project named **order-management**. While it is possible to use any other name for the target project, it would require modifying the deployment configuration for all components, along with the ArgoCD application definitions. This task could be error prone, so do it at your own risk. To create the **order-management** namespace simply run:
+
+```
+oc new-project order-management
+```
+
+### Granting permission for ArgoCD to deploy in the project
+
+Argo CD must be able to create and modify Kubernetes object in the target deployment namespace for the application, so the argocd service account must be granted the "edit" role on that project:
+
+```
+oc policy add-role-to-user edit system:serviceaccount:argocd:argocd-application-controller -n order-management
+```
 
 ### Creating an application in Argo CD
 
@@ -155,13 +170,15 @@ The following points will provide a detailed explanation on how to deploy both t
 
 The procedure to install the OpenShift Pipelines Operator [is explained in detail in the OCP official documentation](https://docs.openshift.com/container-platform/4.4/pipelines/installing-pipelines.html). This operator doesn't come out of the box in vanilla OCP 4 and should be installed to run this demo.  
 
-### Creating the namespace
+### Using the right namespace
 
-All demo materials have been configured to use a namespace or project named **order-management**. While it is possible to use any other name for the target project, it would require modifying the deployment configuration for all components, along with the ArgoCD application definitions. This task could be error prone, so do it at your own risk. To create the **order-management** namespace simply run:
+The target namespace or project named **order-management** was already created while configuring ArgoCD. In order to make sure that all the resources to be created in the following steps are instantiated in the right place, change to the target project by running:
 
 ```
-oc new-project order-management
+oc project order-management
 ```
+
+In case you decided to change the name of the target namespace, change into that project using the same command.
 
 ### The build-bot service account
 
@@ -241,14 +258,6 @@ Given the pipeline will be executed using the build-bot service account, [granti
 
 ```
 oc policy add-role-to-user registry-editor system:serviceaccount:order-management:build-bot
-```
-
-### Granting permission for ArgoCD to deploy in the project
-
-Argo CD must be able to create and modify Kubernetes object in the target deployment namespace for the application, so the argocd service account must be granted the "edit" role on that project:
-
-```
-oc policy add-role-to-user edit system:serviceaccount:argocd:argocd-application-controller -n order-management
 ```
 
 ### Granting permission for applications to access the OCP API

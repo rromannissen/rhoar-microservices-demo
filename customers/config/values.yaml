@@ -14,7 +14,7 @@ simple-java-service:
   health:
     livenessEndpoint: /health/live
     readinessEndpoint: /health/ready
-    probeDelay: 30
+    probeDelay: 5
     probePeriod: 10
     probeTimeout: 2
   imageURL: "image-registry.openshift-image-registry.svc:5000/order-management/customers"

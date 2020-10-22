@@ -30,11 +30,11 @@ spec:
       workspaces:
         - name: output
           workspace: ws
-    - name: maven-package
+    - name: build-artifact
       runAfter:
         - clone-repository
       taskRef:
-        name: maven-with-subdir
+        name: native-with-subdir
       params:
       - name: subdirectory
         value: source/$(params.app-subdir)
@@ -43,7 +43,7 @@ spec:
           workspace: ws
     - name: build-image
       runAfter:
-        - maven-package
+        - build-artifact
       taskRef:
         name: buildah
       params:

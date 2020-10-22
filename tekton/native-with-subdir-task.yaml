@@ -1,0 +1,28 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: native-with-subdir
+spec:
+  description: >-
+    This Task can be used to run a Quarkus native build in a specified subdirectory.
+  workspaces:
+    - name: source
+  params:
+    - name: GOALS
+      description: maven goals to run
+      type: array
+      default:
+        - "package"
+    - name: subdirectory
+      description: Subdirectory in which the maven goals will be run.
+      type: string
+      default: ""
+
+  steps:
+    - name: native-goals
+      image: registry.redhat.io/quarkus/mandrel-20-rhel8
+      workingDir: $(workspaces.source.path)/$(params.subdirectory)
+      command: ["./mvnw"]
+      args:
+        - -Dmaven.repo.local=$(workspaces.source.path)/.m2
+        - "$(params.GOALS)"
