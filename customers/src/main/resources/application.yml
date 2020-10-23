@@ -11,8 +11,8 @@ quarkus:
     sql-load-script: load.sql
   datasource:
     db-kind: postgresql
-    username: customers
-    password: customers
+    username: localuser
+    password: localpass
     jdbc:
       url: jdbc:postgresql://localhost:5432/customers
 
