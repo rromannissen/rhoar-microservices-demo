@@ -19,12 +19,12 @@ Source code for the original demo can still be found in the [tag 1.0-meetup in t
   - Replaced spring-cloud-starter-hystrix with spring-cloud-starter-netflix-hystrix.
 
 - **Quarkus**:
-  - Migrated all Wildfly Swarm services to the Red Hat build of Quarkus 1.3.
+  - Migrated all Wildfly Swarm services to the Red Hat build of Quarkus 1.7.
   - Adapted persistence code to Panache and implemented the Repository pattern.
   - Removed all boilerplate code to setup and configure Opentracing. Used the quarkus-smallrye-opentracing extension instead.
   - Removed the custom health endpoint and replaced it with the quarkus-smallrye-health extension instead.
   - Used package-private instead of private members in beans [following Quarkus recommendations](https://quarkus.io/guides/cdi-reference#native-executables-and-private-members).
-  - Removed Arquillian for testing and used quarkus-junit5 instead. Once the Red Had build of Quarkus 1.4 is released, tests could be further simplified by [using the quarkus-junit5-mockito extension and the @InjectMock annotation](https://quarkus.io/guides/getting-started-testing#further-simplification-with-injectmock).
+  - Removed Arquillian for testing and used quarkus-junit5-mockito instead.
 
 ## Architecture
 
