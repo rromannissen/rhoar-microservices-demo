@@ -10,12 +10,12 @@ quarkus:
       generation: drop-and-create
     sql-load-script: load.sql
   datasource:
-    db-kind: postgresql   
-    username: inventory
-    password: inventory
+    db-kind: postgresql
+    username: localuser
+    password: localpass
     jdbc:
       url: jdbc:postgresql://localhost:5432/inventory
-  
+
   log:
     level: INFO
     category:
@@ -28,7 +28,9 @@ quarkus:
 
 "%dev":
   quarkus:
-    datasource:    
+    kubernetes-config:
+      enabled: false
+    datasource:
       db-kind: h2
       jdbc:
         url: jdbc:h2:mem:inventory;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -36,7 +38,9 @@ quarkus:
 
 "%test":
   quarkus:
-    datasource:    
+    kubernetes-config:
+      enabled: false
+    datasource:
       db-kind: h2
       jdbc:
         url: jdbc:h2:mem:inventory;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE

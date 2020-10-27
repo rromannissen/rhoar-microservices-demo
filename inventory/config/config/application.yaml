@@ -10,7 +10,7 @@ quarkus:
   datasource:
     db-kind: postgresql
     jdbc:
-      url: jdbc:postgresql://postgresql-customers:5432/customers
+      url: jdbc:postgresql://postgresql-inventory:5432/inventory
   log:
     level: INFO
   jaeger:

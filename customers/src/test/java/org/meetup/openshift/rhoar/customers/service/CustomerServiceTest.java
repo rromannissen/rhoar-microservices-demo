@@ -4,15 +4,17 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.when;
 
 import javax.inject.Inject;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.meetup.openshift.rhoar.customers.model.Customer;
+import org.meetup.openshift.rhoar.customers.repository.CustomerRepository;
 
 import io.quarkus.test.junit.QuarkusTest;
-
-//TODO: Refactor to use the quarkus-junit5-mockito extension and the @InjectMock annotation instead when Red Hat build of Quarkus 1.4 is available.
+import io.quarkus.test.junit.mockito.InjectMock;
 
 @QuarkusTest
 public class CustomerServiceTest {
@@ -20,8 +22,30 @@ public class CustomerServiceTest {
 	@Inject
 	CustomerService service;
 	
+	@InjectMock
+	CustomerRepository customerRepository;
+	
+	Customer customer;
+	
+	@BeforeEach
+	void initCustomer() {
+		customer = new Customer();
+		customer.setId(1L);
+		customer.setUsername("mockusername");
+		customer.setName("Test User Mock");
+		customer.setSurname("Test Surname Mock");
+		customer.setAddress("Test Address Mock");
+		customer.setCity("Test City Mock");
+		customer.setCountry("Test Country Mock");
+		customer.setZipCode("MOCKZIP");
+	}
+	
+	
 	@Test
 	public void findByIdExistingTest() {
+		
+		when(customerRepository.findById(1L)).thenReturn(customer);
+		
 		Customer c = service.findById(1L);
 		assertThat(c.getId(), equalTo(1L));
 		assertThat(c.getUsername(), equalTo("mockusername"));
@@ -35,6 +59,9 @@ public class CustomerServiceTest {
 	
 	@Test
 	public void findByIdNonExistingTest() {
+		
+		when(customerRepository.findById(2L)).thenReturn(null);
+		
 		Customer c = service.findById(2L);
 		assertThat(c, is(nullValue()));
 	}
