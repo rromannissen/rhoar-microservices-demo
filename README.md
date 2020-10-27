@@ -2,7 +2,7 @@
 
 This repository was originally intended to contain the source code used as demo for the talk **Openshift Reloaded: Microservices 2.0 with RHOAR"** held at the Openshift Madrid Meetup in February 22nd, 2018 (slides [here](https://www.slideshare.net/rromannissen/openshift-reloaded-microservices-20-with-rhoar)). This demo has now been updated to adapt to [the latest GA available of Red Hat Runtimes](https://www.redhat.com/en/blog/red-hat-runtimes-update-delivers-new-features-open-hybrid-cloud) and replace all services built using Wildfly Swarm with the Red Hat build of Quarkus.
 
-The aim of this demo is to showcase the features included in Red Hat Runtimes, focusing on Spring Boot and Quarkus. Instead of presenting a complex use case, the demo focuses on all the wiring and configuration required to enable all Red Hat Runtimes' answers to several of Microservices' challenges (distributed tracing, externalized configuration, circuit breaker...) using the latest GA available.
+The aim of this demo is to showcase the features included in Red Hat Runtimes, focusing on Spring Boot and Quarkus. Instead of presenting a complex use case, the demo focuses on all the wiring and configuration required to enable all Red Hat Runtimes' answers to several of Microservices' challenges (distributed tracing, externalized configuration, circuit breaker...) using the latest GA available. It also demonstrates how Quarkus can be used in both JDK and native modes, providing an example of how to configure and build a service for each case.
 
 Another focus area is to provide an example of a modern approach to CI/CD using a GitOps paradigm. For that, a deployment pipeline based in new technologies such as [Tekton](https://github.com/tektoncd/pipeline) and [ArgoCD](https://argoproj.github.io/argo-cd/) has been included as well, adding a configuration model based on [Helm Charts](https://helm.sh/).
 
@@ -25,13 +25,14 @@ Source code for the original demo can still be found in the [tag 1.0-meetup in t
   - Removed the custom health endpoint and replaced it with the quarkus-smallrye-health extension instead.
   - Used package-private instead of private members in beans [following Quarkus recommendations](https://quarkus.io/guides/cdi-reference#native-executables-and-private-members).
   - Removed Arquillian for testing and used quarkus-junit5-mockito instead.
+  - Configured native build as default for customers service.
 
 ## Architecture
 
 The demo includes 4 microservices:
 
-- **Customers**: Stores all customer related data. Developed using Quarkus and PostgreSQL as data store.
-- **Inventory**: Stores detailed information about products. It uses the Quarkus/PostgreSQL stack as well.
+- **Customers**: Stores all customer related data. Developed using Quarkus and PostgreSQL as data store. This service is configured to be built in native mode by default.
+- **Inventory**: Stores detailed information about products. It uses the Quarkus/PostgreSQL stack as well. In order to showcase the JDK build for Quarkus, this service has been configured with this build mode by default.
 - **Orders**: Manages all order related entities. It stores only UIDs to refer to Products and Customers. Implemented with Spring Boot and using a PostgreSQL database.
 - **Gateway**: Access and aggregation layer for the whole application. It gets orders data and aggregates Products and Customers detailed information. Also implemented with the Spring Boot/PostgreSQL stack.
 
@@ -43,7 +44,7 @@ It can be argued that the domain is too fine grained for the modeled business, o
 
 This demo has been developed using the following setup:
 
-- Openshift Container Platform 4.5
+- OpenShift Container Platform 4.5
 - OpenShift Pipelines Operator 1.0.1 (Tekton 0.11.3)
 - ArgoCD Operator 0.0.14
 
@@ -74,6 +75,7 @@ The pipeline accepts the following parameters:
 - **target-namespace**: Namespace/project in which to deploy the application.
 - **target-registry**: Registry to push the built image to. Defaults to the internal OCP registry (image-registry.openshift-image-registry.svc:5000).
 
+In order to provide both JDK and native build capabilities, two different implementations of this pipeline have been provided: *jdk-deployment-pipeline* and *native-deployment-pipeline*. The only difference between these two implementations is the builder image used for the Build from Source task, maven for the JDK builds and the [Mandrel](https://developers.redhat.com/blog/2020/06/05/mandrel-a-community-distribution-of-graalvm-for-the-red-hat-build-of-quarkus/) based and supported [Red Hat Build of Quarkus Native builder](https://catalog.redhat.com/software/containers/quarkus/mandrel-20-rhel8/5f43d40b73bfe598d1857c15?container-tabs=overview) image for native.
 
 ## Application Configuration Model
 
@@ -295,7 +297,7 @@ metadata:
 Once all setup is done, the pipeline will have to be run once per component, indicating the different component directory on each run. In order to run the pipeline, [the tkn CLI will have to be installed](https://docs.openshift.com/container-platform/4.4/cli_reference/tkn_cli/installing-tkn.html). For example, for the inventory service, the command and interaction to provide the parameters would be the following:
 
 ```
-$ tkn pipeline start deploy-pipeline --serviceaccount build-bot
+$ tkn pipeline start jdk-deployment-pipeline --serviceaccount build-bot
 ? Value for param `git-url` of type `string`? https://github.com/rromannissen/rhoar-microservices-demo.git
 ? Value for param `git-branch` of type `string`? (Default is `master`) master
 ? Value for param `app-subdir` of type `string`? inventory
@@ -307,6 +309,24 @@ Please give specifications for the workspace: ws
 ?  Type of the Workspace : pvc
 ? Value of Claim Name : inventory-pvc
 ```
+
+To deploy the customers service, **which is configured to build in native mode by default**, you must use native-deployment-pipeline instead:
+
+```
+$ tkn pipeline start native-deployment-pipeline --serviceaccount build-bot
+? Value for param `git-url` of type `string`? https://github.com/rromannissen/rhoar-microservices-demo.git
+? Value for param `git-branch` of type `string`? (Default is `master`) master
+? Value for param `app-subdir` of type `string`? customers
+? Value for param `target-namespace` of type `string`? (Default is `order-management`) order-management
+? Value for param `target-registry` of type `string`? (Default is `image-registry.openshift-image-registry.svc:5000`) image-registry.openshift-image-registry.svc:5000
+Please give specifications for the workspace: ws
+? Name for the workspace : ws
+? Value of the Sub Path :  
+?  Type of the Workspace : pvc
+? Value of Claim Name : customers-pvc
+```
+
+> **Note**: Compiling in native mode is a very memory intensive task. Depending on the size of your OpenShift cluster, you might want to [tune the limit for the memory consumption during the build](https://access.redhat.com/documentation/en-us/red_hat_build_of_quarkus/1.7/html-single/building_a_native_executable_with_red_hat_build_of_quarkus/index#proc-native-memory-configuration) using the quarkus.native.native-image-xmx in the application.yml file.
 
 It is important to highlight the usage of the --serviceaccount flag to make sure the build-bot service account is used in order to access all external resources. Also, a pvc for each service has been provided in the Tekton configuration to avoid having to download dependencies on each run.
 
@@ -335,9 +355,3 @@ java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnectio
 ```
 
 This is caused by [an issue in Hibernate that has been fixed in version 5.4.x](https://hibernate.atlassian.net/browse/HHH-12368). Since the Hibernate version used for the Orders service is 5.3.14, a warning is displayed including the full stack trace for this exception. Although annoying, this warning is harmless for this example and can be ignored.
-
-### Quarkus Kubernetes Config extension not available in 1.3.x
-
-By the time of developing this demo, the Red Hat Build of Quarkus is based on the release 1.3.x of the Quarkus community project. This means that some later features are not included in the productized version supported by Red Hat. [The Quarkus kubernetes-config extension which allows developers to use Kubernetes ConfigMaps and Secrets as a configuration source](https://quarkus.io/guides/kubernetes-config) is among these non available features. The proposed configuration approach relied on non sensitive configuration being available as ConfigMaps to be directly accessed by applications through the OCP API, and sensitive data encrypted in Secrets and mounted as a volume in the application pod. This was meant to be applicable for both Quarkus and Spring Boot, but since the Quarkus version used for this demo doesn't allow this yet, all configuration has been moved to a Secret as a workaround to still enable the externalized configuration mechanism.
-
-This issue should be solved as soon as the next release of the Red Hat Build of Quarkus is available, as the kubernetes-config extension was made available in Quarkus community 1.4.
