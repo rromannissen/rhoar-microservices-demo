@@ -55,7 +55,7 @@ public class CustomerControllerTest {
 	@Test
 	public void getByIdNonExisting() {
 		
-		when(customerService.findById(1L)).thenReturn(null);
+		when(customerService.findById(2L)).thenReturn(null);
 		
 		given()
 			.when().get("/customers/2")
