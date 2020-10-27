@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/rromannissen/rhoar-microservices-demo.git
-    targetRevision: quarkus17
+    targetRevision: master
     path: gateway/config
   destination:
     server: https://kubernetes.default.svc
