@@ -7,7 +7,6 @@ projects:
     type: git
     location: https://github.com/rromannissen/gateway-crw.git
     branch: master
-    sparseCheckoutDir: gateway
 - name: orders
   source:
     type: git
