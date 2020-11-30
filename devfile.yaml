@@ -5,8 +5,8 @@ projects:
 - name: gateway
   source:
     type: git
-    location: https://github.com/rromannissen/rhoar-microservices-demo.git
-    branch: crw
+    location: https://github.com/rromannissen/gateway-crw.git
+    branch: master
     sparseCheckoutDir: gateway
 - name: orders
   source:
