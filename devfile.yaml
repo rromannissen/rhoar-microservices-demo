@@ -22,3 +22,7 @@ projects:
     type: git
     location: https://github.com/rromannissen/customers-crw.git
     branch: master
+components:
+- alias: postgresql-customers
+  type: kubernetes
+    reference: postgresql-customers.yaml
