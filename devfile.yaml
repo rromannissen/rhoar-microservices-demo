@@ -5,9 +5,24 @@ projects:
 - name: gateway
   source:
     type: git
-    location: https://github.com/rromannissen/rhoar-microservices-demo.git
-    branch: crw-test
+    location: https://github.com/rromannissen/gateway-crw.git
+    branch: master
+- name: orders
+  source:
+    type: git
+    location: https://github.com/rromannissen/orders-crw.git
+    branch: master
+- name: inventory
+  source:
+    type: git
+    location: https://github.com/rromannissen/inventory-crw.git
+    branch: master
+- name: customers
+  source:
+    type: git
+    location: https://github.com/rromannissen/customers-crw.git
+    branch: master
 components:
 - alias: postgresql-customers
   type: kubernetes
-    reference: postgresql-customers.yaml
+  reference: postgresql-customers.yaml
