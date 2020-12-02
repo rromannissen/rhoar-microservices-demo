@@ -152,6 +152,8 @@ items:
 - apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
+    annotations:
+      description: Route for jaeger's query service.
     labels:
       app: jaeger
       jaeger-infra: template-all-in-one
