@@ -13,9 +13,9 @@ items:
     ports:
     - name: postgresql
       nodePort: 0
-      port: 5432
+      port: 5434
       protocol: TCP
-      targetPort: 5432
+      targetPort: 5434
     selector:
       name: postgresql-orders
     sessionAffinity: None
@@ -62,7 +62,7 @@ items:
             timeoutSeconds: 10
           name: postgresql-orders
           ports:
-          - containerPort: 5432
+          - containerPort: 5434
             protocol: TCP
           readinessProbe:
             exec:

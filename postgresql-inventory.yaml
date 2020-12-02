@@ -13,9 +13,9 @@ items:
     ports:
     - name: postgresql
       nodePort: 0
-      port: 5432
+      port: 5433
       protocol: TCP
-      targetPort: 5432
+      targetPort: 5433
     selector:
       name: postgresql-inventory
     sessionAffinity: None
@@ -62,7 +62,7 @@ items:
             timeoutSeconds: 10
           name: postgresql-inventory
           ports:
-          - containerPort: 5432
+          - containerPort: 5433
             protocol: TCP
           readinessProbe:
             exec:
