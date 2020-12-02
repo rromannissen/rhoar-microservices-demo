@@ -54,9 +54,6 @@ items:
             limits:
               cpu: 500m
               memory: 2Gi
-            requests:
-              cpu: 100m
-              memory: 100Mi
 - apiVersion: v1
   kind: Service
   metadata:

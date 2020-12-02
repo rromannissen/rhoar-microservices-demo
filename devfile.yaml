@@ -32,3 +32,6 @@ components:
 - alias: postgresql-inventory
   type: kubernetes
   reference: ./postgresql-inventory.yaml
+- alias: jaeger
+  type: openshift
+  reference: ./jaeger.yaml
