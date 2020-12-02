@@ -52,6 +52,7 @@ items:
             initialDelaySeconds: 5
           resources:
             limits:
+              cpu: 500m
               memory: 2Gi
 - apiVersion: v1
   kind: Service
