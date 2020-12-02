@@ -26,3 +26,12 @@ components:
 - alias: postgresql-customers
   type: kubernetes
   reference: ./postgresql-customers.yaml
+- alias: postgresql-orders
+  type: kubernetes
+  reference: ./postgresql-orders.yaml
+- alias: postgresql-inventory
+  type: kubernetes
+  reference: ./postgresql-inventory.yaml
+- alias: jaeger
+  type: kubernetes
+  reference: ./jaeger.yaml
