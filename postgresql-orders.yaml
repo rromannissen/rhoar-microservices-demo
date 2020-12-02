@@ -51,6 +51,8 @@ items:
             value: orders
           - name: POSTGRESQL_DATABASE
             value: orders
+          - name: PGPORT
+            value: "5434"
           image: registry.redhat.io/rhel8/postgresql-10
           imagePullPolicy: IfNotPresent
           livenessProbe:

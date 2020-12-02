@@ -51,6 +51,8 @@ items:
             value: inventory
           - name: POSTGRESQL_DATABASE
             value: inventory
+          - name: PGPORT
+            value: "5433"
           image: registry.redhat.io/rhel8/postgresql-10
           imagePullPolicy: IfNotPresent
           livenessProbe:
