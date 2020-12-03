@@ -23,16 +23,23 @@ projects:
     location: https://github.com/rromannissen/customers-crw.git
     branch: master
 components:
-- id: redhat/java8/latest
-  type: chePlugin
+- type: chePlugin
+  id: redhat/java/latest
+  memoryLimit: 1512Mi
+  preferences:
+    java.server.launchMode: Standard
 - id: redhat/dependency-analytics/latest
   type: chePlugin
 - alias: maven
   type: dockerimage
   mountSources: true
   endpoints:
-  - name: 8080-tcp
+  - name: '8080-tcp'
     port: 8080
+  - name: 'debug'
+    port: 5005
+    attributes:
+      public: 'false'
   memoryLimit: 768Mi
   volumes:
   - name: m2
@@ -67,7 +74,7 @@ commands:
   - type: exec
     component: maven
     command: |
-          java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 \
+          java -jar -Dspring.profiles.active=codeready -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 \
           target/*.jar
     workdir: ${CHE_PROJECTS_ROOT}/gateway
 - name: Debug gateway java service
@@ -79,7 +86,7 @@ commands:
           "configurations": [
             {
               "type": "java",
-              "name": "Debug (Attach) - Remote",
+              "name": "Debug (Attach) - Gateway Remote",
               "request": "attach",
               "hostName": "localhost",
               "port": 5005
