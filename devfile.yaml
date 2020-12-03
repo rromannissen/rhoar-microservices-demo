@@ -23,11 +23,8 @@ projects:
     location: https://github.com/rromannissen/customers-crw.git
     branch: master
 components:
-- type: chePlugin
-  id: redhat/java/latest
-  memoryLimit: 1512Mi
-  preferences:
-    java.server.launchMode: Standard
+- id: redhat/java/latest
+  type: chePlugin
 - id: redhat/dependency-analytics/latest
   type: chePlugin
 - alias: maven
