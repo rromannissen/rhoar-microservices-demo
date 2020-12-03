@@ -55,3 +55,33 @@ components:
 - alias: jaeger
   type: openshift
   reference: ./jaeger.yaml
+commands:
+- name: Build gateway with Maven
+  actions:
+  - type: exec
+    component: maven
+    command: "mvn clean install"
+    workdir: ${CHE_PROJECTS_ROOT}/gateway
+- name: Run gateway service
+  actions:
+  - type: exec
+    component: maven
+    command: |
+          java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 \
+          target/*.jar
+    workdir: ${CHE_PROJECTS_ROOT}/gateway
+- name: Debug gateway java service
+  actions:
+  - type: vscode-launch
+    referenceContent: |
+          {
+          "version": "0.2.0",
+          "configurations": [
+            {
+              "type": "java",
+              "name": "Debug (Attach) - Remote",
+              "request": "attach",
+              "hostName": "localhost",
+              "port": 5005
+            }]
+          }
