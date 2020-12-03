@@ -34,10 +34,28 @@ components:
   type: dockerimage
   mountSources: true
   endpoints:
-  - name: '8080-tcp'
+  - name: '8080-tcp-gateway'
     port: 8080
-  - name: 'debug'
+  - name: '8081-tcp-orders'
+    port: 8081
+  - name: '8082-tcp-inventory'
+    port: 8082
+  - name: '8083-tcp-customers'
+    port: 8083
+  - name: 'debug-gateway'
     port: 5005
+    attributes:
+      public: 'false'
+  - name: 'debug-orders'
+    port: 5006
+    attributes:
+      public: 'false'
+  - name: 'debug-inventory'
+    port: 5007
+    attributes:
+      public: 'false'
+  - name: 'debug-customers'
+    port: 5008
     attributes:
       public: 'false'
   memoryLimit: 768Mi
