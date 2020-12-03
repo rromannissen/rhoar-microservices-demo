@@ -23,6 +23,26 @@ projects:
     location: https://github.com/rromannissen/customers-crw.git
     branch: master
 components:
+- id: redhat/java8/latest
+  type: chePlugin
+- id: redhat/dependency-analytics/latest
+  type: chePlugin
+- alias: maven
+  type: dockerimage
+  mountSources: true
+  endpoints:
+  - name: 8080-tcp
+    port: 8080
+  memoryLimit: 768Mi
+  volumes:
+  - name: m2
+    containerPath: /home/jboss/.m2
+  image: registry.redhat.io/codeready-workspaces/plugin-java11-rhel8
+  env:
+  - value: '-XX:MaxRAMPercentage=50.0 -XX:+UseParallelGC -XX:MinHeapFreeRatio=10 -XX:MaxHeapFreeRatio=20 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xms20m -Djava.security.egd=file:/dev/./urandom -Duser.home=/home/jboss'
+    name: JAVA_OPTS
+  - value: $(JAVA_OPTS)
+    name: MAVEN_OPTS
 - alias: postgresql-customers
   type: kubernetes
   reference: ./postgresql-customers.yaml
