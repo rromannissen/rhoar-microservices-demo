@@ -65,9 +65,6 @@ components:
     name: JAVA_OPTS
   - value: $(JAVA_OPTS)
     name: MAVEN_OPTS
-- alias: jaeger
-  type: openshift
-  reference: ./jaeger.yaml
 commands:
 - name: Build gateway with Maven
   actions:
