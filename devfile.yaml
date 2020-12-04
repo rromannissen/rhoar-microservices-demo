@@ -28,8 +28,6 @@ components:
   volumes:
   - name: m2
     containerPath: /home/jboss/.m2
-- id: redhat/dependency-analytics/latest
-  type: chePlugin
 - alias: maven
   type: dockerimage
   mountSources: true
