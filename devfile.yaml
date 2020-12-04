@@ -27,6 +27,8 @@ components:
   type: chePlugin
 - id: redhat/dependency-analytics/latest
   type: chePlugin
+- type: chePlugin 
+  reference: "https://raw.githubusercontent.com/rromannissen/rhoar-microservices-demo/crw/plugin.yaml"
 - alias: maven
   type: dockerimage
   mountSources: true
