@@ -12,5 +12,5 @@ category: Other
 firstPublicationDate: '2018-11-03'
 spec:                                                             
   extensions:
-  - "https://raw.githubusercontent.com/rromannissen/rhoar-microservices-demo/crw/vscode-lombok-1.0.1.vsix" 
+  - "https://raw.githubusercontent.com/rromannissen/rhoar-microservices-demo/crw/vscode-lombok-0.9.8.vsix" 
 latestUpdateDate: "2020-02-18"
