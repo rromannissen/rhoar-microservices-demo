@@ -107,6 +107,18 @@ commands:
           java -jar -Dspring.profiles.active=crw -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5006 \
           target/*.jar
     workdir: ${CHE_PROJECTS_ROOT}/orders
+- name: Run customers service in Quarkus dev mode
+  actions:
+  - type: exec
+    component: maven
+    command: "./mvnw compile quarkus:dev -Ddebug=5007 -P local"
+    workdir: ${CHE_PROJECTS_ROOT}/customers
+- name: Run inventory service in Quarkus dev mode
+  actions:
+  - type: exec
+    component: maven
+    command: "./mvnw compile quarkus:dev -Ddebug=5008 -P local"
+    workdir: ${CHE_PROJECTS_ROOT}/inventory
 - name: Debug gateway java service
   actions:
   - type: vscode-launch
@@ -127,5 +139,18 @@ commands:
               "request": "attach",
               "hostName": "localhost",
               "port": 5006
+            },
+            {
+              "type": "java",
+              "name": "Debug (Attach) - Customers Remote",
+              "request": "attach",
+              "hostName": "localhost",
+              "port": 5007
+            },{
+              "type": "java",
+              "name": "Debug (Attach) - Inventory Remote",
+              "request": "attach",
+              "hostName": "localhost",
+              "port": 5008
             }]
           }
