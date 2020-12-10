@@ -48,15 +48,14 @@ components:
     port: 5006
     attributes:
       public: 'false'
-  - name: 'debug-inventory'
+  - name: 'debug-customers'
     port: 5007
     attributes:
       public: 'false'
-  - name: 'debug-customers'
+  - name: 'debug-inventory'
     port: 5008
     attributes:
       public: 'false'
-  memoryLimit: 768Mi
   volumes:
   - name: m2
     containerPath: /home/jboss/.m2
