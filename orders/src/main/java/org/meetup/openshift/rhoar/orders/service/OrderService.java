@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.meetup.openshift.rhoar.orders.model.Order;
 import org.meetup.openshift.rhoar.orders.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,5 +47,12 @@ public class OrderService {
 		} finally {
 			span.finish();
 		}
+	}
+	
+	public Page<Order>findAll(Pageable pageable) {
+		log.debug("Entering OrderService.findAll()");
+		Page<Order> p = repository.findAll(pageable);
+		log.debug("Returning element: " + p);
+		return p;
 	}
 }

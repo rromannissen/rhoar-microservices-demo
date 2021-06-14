@@ -4,6 +4,8 @@ import org.meetup.openshift.rhoar.orders.exception.ResourceNotFoundException;
 import org.meetup.openshift.rhoar.orders.model.Order;
 import org.meetup.openshift.rhoar.orders.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +43,11 @@ public class OrderController {
 			span.finish();
 		}
 		return o;
+	}
+	
+	@RequestMapping
+	public Page<Order> findAll(Pageable pageable){
+		return orderService.findAll(pageable);
 	}
 
 }
