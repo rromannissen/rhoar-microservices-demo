@@ -30,6 +30,8 @@ quarkus:
 
 "%dev":
   quarkus:
+    http:
+      port: 8082
     kubernetes-config:
       enabled: false
     datasource:

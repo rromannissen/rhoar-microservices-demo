@@ -9,9 +9,11 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 
 @Entity
 @Table(name = "products")
+@RegisterForReflection
 public class Product extends PanacheEntityBase {
 	
 	@Id

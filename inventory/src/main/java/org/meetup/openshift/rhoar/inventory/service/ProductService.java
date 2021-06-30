@@ -1,6 +1,8 @@
 package org.meetup.openshift.rhoar.inventory.service;
 
 
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -11,6 +13,8 @@ import org.meetup.openshift.rhoar.inventory.repository.ProductRepository;
 
 import io.opentracing.Span;
 import io.opentracing.Tracer;
+import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
 
 @Transactional
 @ApplicationScoped
@@ -34,6 +38,16 @@ public class ProductService implements IProductService {
 		childSpan.setTag("layer", "Service");
 		logger.debug("Entering ProductService.findById()");
 		Product p = repository.findById(id);
+		childSpan.finish();
+		return p;
+	}
+
+	@Override
+	public List<Product> findAll(Page page, Sort sort) {
+		Span childSpan = tracer.buildSpan("findAll").start();
+		childSpan.setTag("layer", "Service");
+		logger.debug("Entering ProductService.findAll()");
+		List<Product> p = repository.findAll(page, sort);
 		childSpan.finish();
 		return p;
 	}

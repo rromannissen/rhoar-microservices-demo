@@ -18,7 +18,7 @@ import rx.Observable;
 
 @Component
 @Slf4j
-public class InventoryRepository {
+public class InventoryRepository extends GenericRepository{
 	
 	@Autowired
 	Tracer tracer;

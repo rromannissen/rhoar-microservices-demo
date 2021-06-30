@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class CustomerRepository {
+public class CustomerRepository extends GenericRepository{
 	
 	@Autowired
 	Tracer tracer;

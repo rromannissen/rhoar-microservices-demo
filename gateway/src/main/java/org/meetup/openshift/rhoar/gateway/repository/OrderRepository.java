@@ -1,8 +1,15 @@
 package org.meetup.openshift.rhoar.gateway.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.meetup.openshift.rhoar.gateway.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -16,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class OrderRepository {
+public class OrderRepository extends GenericRepository {
 	@Autowired
 	Tracer tracer;
 	
@@ -45,9 +52,38 @@ public class OrderRepository {
 		span.finish();
 		return o;
 	}
+	
+	@HystrixCommand(commandKey = "AllOrders", fallbackMethod = "getFallbackOrders", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
+	})
+	public List<Order> findAll(Pageable pageable) {
+		Span span = tracer.buildSpan("findAll").start();
+		log.debug("Entering OrderRepository.findAll()");
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ordersServiceURL)
+				.queryParam("page", pageable.getPageNumber())
+				.queryParam("size", pageable.getPageSize())
+				.queryParam("sort", getSortString(pageable));
+		ResponseEntity<List<Order>> responseEntity = 
+				  restTemplate.exchange(
+						  builder.toUriString(),
+						  HttpMethod.GET,
+						  null,
+						  new ParameterizedTypeReference<List<Order>>() {}
+				  );
+		List<Order> orders = responseEntity.getBody();
+		span.finish();
+		return orders;
+	}
+	
 
 	public Order getFallbackOrder(Long id, Throwable e) {
 		log.warn("Failed to obtain Order, " + e.getMessage() + " for order with id " + id);
 		return null;
 	}
+	
+	public List<Order> getFallbackOrders(Pageable pageable, Throwable e) {
+		log.warn("Failed to obtain Orders, " + e.getMessage());
+		return new ArrayList<Order>();
+	}
+	
 }

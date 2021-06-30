@@ -1,10 +1,15 @@
 package org.meetup.openshift.rhoar.gateway.service;
 
+import java.util.List;
+
 import org.meetup.openshift.rhoar.gateway.model.Order;
 import org.meetup.openshift.rhoar.gateway.repository.CustomerRepository;
 import org.meetup.openshift.rhoar.gateway.repository.InventoryRepository;
 import org.meetup.openshift.rhoar.gateway.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import io.opentracing.Span;
@@ -37,6 +42,18 @@ public class OrdersService {
 		}
 		span.finish();
 		return o;
+	}
+
+	public Page<Order> findAll(Pageable pageable) {
+		Span span = tracer.buildSpan("findAll").start();
+		log.debug("Entering OrdersService.findAll()");
+		List<Order> orders = orderRepository.findAll(pageable);
+		for (Order o : orders) {
+			o.setCustomer(customerRepository.getCustomerById(o.getCustomer().getId()));
+			o.setItems(inventoryRepository.getProductDetails(o.getItems()));
+		}
+		span.finish();
+		return new PageImpl<Order>(orders, pageable, orders.size());
 	}	
 
 }
