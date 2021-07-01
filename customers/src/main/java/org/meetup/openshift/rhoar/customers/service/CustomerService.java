@@ -1,6 +1,8 @@
 package org.meetup.openshift.rhoar.customers.service;
 
 
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -11,6 +13,8 @@ import org.meetup.openshift.rhoar.customers.repository.CustomerRepository;
 
 import io.opentracing.Span;
 import io.opentracing.Tracer;
+import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
 
 @Transactional
 @ApplicationScoped
@@ -34,6 +38,16 @@ public class CustomerService implements ICustomerService{
 		childSpan.setTag("layer", "Service");
 		logger.debug("Entering CustomerService.findById()");
 		Customer c = repository.findById(id);
+		childSpan.finish();
+		return c;
+	}
+	
+	@Override
+	public List<Customer> findAll(Page page, Sort sort) {
+		Span childSpan = tracer.buildSpan("findAll").start();
+		childSpan.setTag("layer", "Service");
+		logger.debug("Entering CustomerService.findAll()");
+		List<Customer> c = repository.findAll(page, sort);
 		childSpan.finish();
 		return c;
 	}

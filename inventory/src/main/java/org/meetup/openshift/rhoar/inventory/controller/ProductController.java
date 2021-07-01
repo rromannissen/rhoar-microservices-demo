@@ -72,24 +72,28 @@ public class ProductController {
 	 * @return The {@link Sort} object with the sort criteria to apply.
 	 */
 	private Sort getSortFromQuery(String sortString) {
-		List<String> sortQuery = Arrays.asList(sortString.split(","));
-		if (sortQuery == null || sortQuery.size()== 0 || sortQuery.size() >2)	
-			return null;
-		else {
-			if (sortQuery.size() == 1) {
-				return Sort.by(sortQuery.get(0));
-			} else {
-				if (sortQuery.get(1).equals("asc")) {
-					return Sort.ascending(sortQuery.get(0));
+		if (sortString != null && !sortString.equals("")) {
+			List<String> sortQuery = Arrays.asList(sortString.split(","));
+			if (sortQuery == null || sortQuery.size()== 0 || sortQuery.size() >2) {	
+				return null;
+			}
+			else {
+				if (sortQuery.size() == 1) {
+					return Sort.by(sortQuery.get(0));
 				} else {
-					if (sortQuery.get(1).equals("desc")) {
-						return Sort.descending(sortQuery.get(0));
+					if (sortQuery.get(1).equals("asc")) {
+						return Sort.ascending(sortQuery.get(0));
 					} else {
-						return Sort.by(sortQuery.get(0));
+						if (sortQuery.get(1).equals("desc")) {
+							return Sort.descending(sortQuery.get(0));
+						} else {
+							return Sort.by(sortQuery.get(0));
+						}
 					}
 				}
-			}
-		}	
+			}	
+		}
+		return null;
 	}
 
 }

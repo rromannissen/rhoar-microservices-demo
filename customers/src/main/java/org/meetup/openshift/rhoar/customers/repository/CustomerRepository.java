@@ -1,5 +1,7 @@
 package org.meetup.openshift.rhoar.customers.repository;
 
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -9,6 +11,8 @@ import org.meetup.openshift.rhoar.customers.model.Customer;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
 
 @ApplicationScoped
 public class CustomerRepository implements PanacheRepository<Customer> {
@@ -20,9 +24,20 @@ public class CustomerRepository implements PanacheRepository<Customer> {
 	
 	public Customer findById(Long id) {
 		Span childSpan = tracer.buildSpan("findById").start();
-		childSpan.setTag("layer", "DAO");
-		logger.debug("Entering CustomerDAO.findById()");
+		childSpan.setTag("layer", "Repository");
+		logger.debug("Entering CustomerRepository.findById()");
 		Customer c = find("id", id).firstResult();
+		childSpan.finish();
+		return c;
+	}
+	
+	public List<Customer> findAll(Page page, Sort sort) {
+		Span childSpan = tracer.buildSpan("findAll").start();
+		childSpan.setTag("layer", "Repository");
+		logger.debug("Entering CustomerRepository.findAll()");
+		List<Customer> c = Customer.findAll(sort)
+				.page(page)
+				.list();
 		childSpan.finish();
 		return c;
 	}

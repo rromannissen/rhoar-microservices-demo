@@ -24,8 +24,8 @@ public class ProductRepository implements PanacheRepository<Product> {
 	
 	public Product findById(Long id) {
 		Span childSpan = tracer.buildSpan("findById").start();
-		childSpan.setTag("layer", "DAO");
-		logger.debug("Entering CustomerDAO.findById()");
+		childSpan.setTag("layer", "Repository");
+		logger.debug("Entering ProductRepository.findById()");
 		Product p = find("id", id).firstResult();
 		childSpan.finish();
 		return p;
@@ -33,8 +33,8 @@ public class ProductRepository implements PanacheRepository<Product> {
 	
 	public List<Product> findAll(Page page, Sort sort) {
 		Span childSpan = tracer.buildSpan("findAll").start();
-		childSpan.setTag("layer", "DAO");
-		logger.debug("Entering CustomerDAO.findAll()");
+		childSpan.setTag("layer", "Repository");
+		logger.debug("Entering ProductRepository.findAll()");
 		List<Product> p = Product.findAll(sort)
 				.page(page)
 				.list();
