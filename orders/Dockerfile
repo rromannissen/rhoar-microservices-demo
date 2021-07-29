@@ -1,3 +1,3 @@
-FROM registry.redhat.io/openjdk/openjdk-11-rhel8
+FROM registry.access.redhat.com/ubi8/openjdk-11:1.3-16
 
 COPY target/*-exec.jar /deployments/app.jar

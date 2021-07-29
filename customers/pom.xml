@@ -78,6 +78,11 @@
 			<artifactId>rest-assured</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-jdbc-h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -156,13 +161,6 @@
 		<profile>
 			<id>local</id>
 			<activation />
-			<dependencies>
-				<dependency>
-					<groupId>io.quarkus</groupId>
-					<artifactId>quarkus-jdbc-h2</artifactId>
-					<scope>runtime</scope>
-				</dependency>
-			</dependencies>
 		</profile>
 		<profile>
 			<id>openshift</id>

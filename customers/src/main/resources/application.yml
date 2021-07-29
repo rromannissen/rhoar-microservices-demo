@@ -10,7 +10,7 @@ quarkus:
       generation: drop-and-create
     sql-load-script: load.sql
   datasource:
-    db-kind: postgresql
+    db-kind: h2
     username: localuser
     password: localpass
     jdbc:

@@ -1,11 +1,6 @@
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1
-WORKDIR /deployments/
-RUN chown 1001 /deployments \
-    && chmod "g+rwX" /deployments \
-    && chown 1001:root /deployments
-COPY --chown=1001:root target/*-runner /deployments/application
+FROM registry.access.redhat.com/ubi8/openjdk-11:1.3-16
+# Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
+ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
 
-EXPOSE 8080
-USER 1001
-
-CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
+COPY target/lib/* /deployments/lib/
+COPY target/*-runner.jar /deployments/app.jar
