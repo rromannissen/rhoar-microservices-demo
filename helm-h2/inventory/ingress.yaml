@@ -6,7 +6,7 @@ metadata:
   name: inventory
 spec:
   rules:
-  - host: inventory.fedev.10.19.2.21.nip.io
+  - host: inventory.inventory-src.10.19.2.21.nip.io
     http:
       paths:
       - backend:

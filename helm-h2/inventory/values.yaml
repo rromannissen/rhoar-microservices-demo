@@ -13,5 +13,12 @@ health:
   probeDelay: 5
   probePeriod: 10
   probeTimeout: 2
-imageURL: "quay.io/rromanni/inventory:fe-0.1"
+# imageURL: "quay.io/rromanni/inventory:fe-0.1"
+imageURL: "quay.io/rofrano/inventory:0.1"
 env: []
+
+postgresql:
+  postgresqlDatabase: "inventory"
+  postgresqlUsername: "inventory"
+  postgresqlPassword: "inventory"
+  servicePort: "5432"
