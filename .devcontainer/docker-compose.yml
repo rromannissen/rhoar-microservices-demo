@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    hostname: dev
+    # ports:
+    #   - 8080:8080
+    volumes:
+      - ~/.gitconfig:/home/jboss/.gitconfig
+      - ~/.ssh/:/home/jboss/.ssh/
+      - ..:/workspace
+    command: sleep infinity
+    environment:
+      DATABASE_URI: "postgres://postgres:postgres@postgres:5432/postgres"
+    networks:
+      - dev
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - dev
+
+volumes:
+  postgres:
+
+networks:
+  dev:
