@@ -16,7 +16,8 @@
 		"DavidAnson.vscode-markdownlint",
 		"bierner.github-markdown-preview",
 		"donjayamanne.githistory",
-		"github.vscode-pull-request-github"
+		"github.vscode-pull-request-github",
+		"ms-kubernetes-tools.vscode-kubernetes-tools"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
