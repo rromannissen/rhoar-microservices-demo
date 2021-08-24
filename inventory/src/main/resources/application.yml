@@ -10,11 +10,11 @@ quarkus:
       generation: drop-and-create
     sql-load-script: load.sql
   datasource:
-    db-kind: h2
-    username: localuser
-    password: localpass
+    db-kind: postgresql
+    username: postgres
+    password: postgres
     jdbc:
-      url: jdbc:postgresql://localhost:5432/inventory
+      url: jdbc:postgresql://postgresql:5432/postgres
 
   log:
     level: DEBUG
