@@ -9,20 +9,27 @@ The following steps should be performed after logging into your kubernetes clust
 1. Create a namespace for the inventory service
 
     ```bash
-    kubectl create namespace inventory
+    $ kubectl create namespace inventory
     ```
 
 1. [Optional] set the namespace as the default for your session:
 
     ```bash
-    kubectl config set-context --current --namespace=inventory
+    $ kubectl config set-context --current --namespace=inventory
+    ```
+
+1. Add the `bitnami` helm repo:
+
+    ```bash
+    $ helm repo add bitnami https://charts.bitnami.com/bitnami
+    $ helm repo update
     ```
 
 1. Deploy the inventory service with it's database using the following `helm` command:
 
     ```bash
-    cd helm-h2/inventory
-    helm upgrade inventory ./java-backend/ -f values.yaml --install -n inventory
+    $ cd helm-h2/inventory
+    $ helm upgrade inventory ./java-backend/ -f values.yaml --install -n inventory
     ```
 
 ## Check the installation
@@ -32,13 +39,13 @@ The easiest way to check the installation is to forward the port on the inventor
 - In one shell session issue this command:
 
     ```bash
-    kubectl port-forward svc/inventory 8080:8080
+    $ kubectl port-forward svc/inventory 8080:8080
     ```
 
 - In a second shell type:
 
     ```bash
-    curl 127.0.0.1:8080/products
+    $ curl 127.0.0.1:8080/products
     ```
 
 Your should get back a `json` payload that is an array of products.
