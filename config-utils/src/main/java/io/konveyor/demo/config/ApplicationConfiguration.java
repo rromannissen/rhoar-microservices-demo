@@ -4,11 +4,11 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class Configuration {
+public class ApplicationConfiguration {
 	
 	private Properties config;
 
-	public Configuration() {
+	public ApplicationConfiguration() {
 		super();
 		this.config = loadProperties();
 		
@@ -28,7 +28,7 @@ public class Configuration {
 		return properties;
 	}
 	
-	String getProperty (String name) {
+	public String getProperty (String name) {
 		return config.getProperty(name);
 	}
 	

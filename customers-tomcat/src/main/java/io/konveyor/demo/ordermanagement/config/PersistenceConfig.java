@@ -4,11 +4,8 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -19,17 +16,15 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import io.konveyor.demo.config.ApplicationConfiguration;
+
 @Configuration
 @EnableJpaRepositories(basePackages = {
         "io.konveyor.demo.ordermanagement.repository"
 })
 @EnableTransactionManagement
 @EnableSpringDataWebSupport
-@PropertySource("classpath:persistence.properties")
 public class PersistenceConfig {
-	
-	@Autowired
-    private Environment env;
 
 
     @Bean
@@ -45,11 +40,12 @@ public class PersistenceConfig {
     
     @Bean
     public DataSource dataSource() {
+    	ApplicationConfiguration config = new ApplicationConfiguration();
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
-        dataSource.setUrl(env.getProperty("jdbc.url"));
-        dataSource.setUsername(env.getProperty("jdbc.user"));
-        dataSource.setPassword(env.getProperty("jdbc.password"));
+        dataSource.setDriverClassName(config.getProperty("jdbc.driverClassName"));
+        dataSource.setUrl(config.getProperty("jdbc.url"));
+        dataSource.setUsername(config.getProperty("jdbc.user"));
+        dataSource.setPassword(config.getProperty("jdbc.password"));
 
         return dataSource;
     }
@@ -67,9 +63,10 @@ public class PersistenceConfig {
     }
 
     final Properties additionalProperties() {
+    	ApplicationConfiguration config = new ApplicationConfiguration();
         final Properties hibernateProperties = new Properties();
-        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
-        hibernateProperties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
+        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", config.getProperty("hibernate.hbm2ddl.auto"));
+        hibernateProperties.setProperty("hibernate.dialect", config.getProperty("hibernate.dialect"));
         hibernateProperties.setProperty("hibernate.cache.use_second_level_cache", "false");
 
         return hibernateProperties;
