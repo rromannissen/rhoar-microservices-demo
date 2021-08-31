@@ -24,7 +24,7 @@
                 </javaclass>
             </when>
             <perform>
-                <hint title="Legacy configuration with io.konveyor.demo.config.ApplicationConfiguration" effort="1" category-id="mandatory">
+                <hint title="Legacy configuration with io.konveyor.demo.config.ApplicationConfiguration" effort="1" category-id="cloud-mandatory">
                     <message>
                         The legacy ApplicationConfiguration class is being used in this application. This is discouraged by the migration
                         guidelines, and should be replaced by a more standard approach using Spring's @PropertySource annotation and Environment class:
